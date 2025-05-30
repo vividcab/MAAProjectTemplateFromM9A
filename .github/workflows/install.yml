@@ -83,6 +83,7 @@ jobs:
           extract: true
 
       - name: Download MFAAvalonia
+        id: download_mfa
         uses: robinraju/release-downloader@v1
         with:
           repository: SweetSmellFox/MFAAvalonia
@@ -94,21 +95,18 @@ jobs:
       - name: Clean up MFAAvalonia archive on Windows
         shell: bash
         run: |
-          ARCHIVE_PATTERN="MFAAvalonia-*-win-x64*"
-          echo "Attempting to remove downloaded archive matching: ${ARCHIVE_PATTERN}"
-          rm -f ${ARCHIVE_PATTERN}
+          ARCHIVE_FILE_PATH="${{ fromJson(steps.download_mfa.outputs.downloaded_files)[0] }}"
+          rm -f "${ARCHIVE_FILE_PATH}"
           echo "Archive cleanup command executed for MFAAvalonia on Windows."
 
-      - name: Setup Embed Python
-        shell: powershell
+      - name: Setup Embed Python on Windows
+        shell: bash
         run: |
-          ./tools/ci/setup_embed_python.ps1
-
+          python tools/ci/setup_embed_python.py
       - name: Install
         shell: bash
         run: |
-          python ./tools/install.py ${{ needs.meta.outputs.tag }}
-
+          ./install/python/python.exe ./tools/install.py ${{ needs.meta.outputs.tag }}
           if [ -d "MFA" ]; then
             echo "Copying MFA files to install directory..."
             mkdir -p install
@@ -122,12 +120,11 @@ jobs:
           name: M9A-win-${{ matrix.arch }}
           path: "install"
 
-  unix:
+  linux:
     needs: meta
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
         arch: [aarch64, x86_64]
       fail-fast: false
 
@@ -136,67 +133,114 @@ jobs:
         with:
           submodules: true
 
-      - name: Download MaaFramework
+      - name: Download MaaFramework for Linux
         uses: robinraju/release-downloader@v1
         with:
           repository: MaaXYZ/MaaFramework
-          fileName: "MAA-${{ matrix.os == 'ubuntu-latest' && 'linux' || 'macos' }}-${{ matrix.arch }}*"
+          fileName: "MAA-linux-${{ matrix.arch }}*"
           latest: true
           preRelease: true
           out-file-path: "deps"
           extract: true
 
-      - name: Download MFAAvalonia
+      - name: Download MFAAvalonia for Linux
+        id: download_mfa
         uses: robinraju/release-downloader@v1
         with:
           repository: SweetSmellFox/MFAAvalonia
-          fileName: "MFAAvalonia-*-${{ matrix.os == 'ubuntu-latest' && 'linux' || 'osx' }}-${{ matrix.arch == 'x86_64' && 'x64' || 'arm64' }}*"
+          fileName: "MFAAvalonia-*-linux-${{ matrix.arch == 'x86_64' && 'x64' || 'arm64' }}*"
           latest: true
           out-file-path: "MFA"
           extract: true
 
-      - name: Clean up MFAAvalonia archive on Unix
+      - name: Clean up MFAAvalonia archive on Linux
         shell: bash
         run: |
-          OS_NAME=""
-          if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
-            OS_NAME="linux"
-          elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-            OS_NAME="osx"
-          fi
+          ARCHIVE_FILE_PATH="${{ fromJson(steps.download_mfa.outputs.downloaded_files)[0] }}"
+          rm -f "${ARCHIVE_FILE_PATH}"
+          echo "Archive cleanup command executed for MFAAvalonia on Linux."
 
-          ARCH_NAME=""
-          if [[ "${{ matrix.arch }}" == "x86_64" ]]; then
-            ARCH_NAME="x64"
-          elif [[ "${{ matrix.arch }}" == "aarch64" ]]; then
-            ARCH_NAME="arm64"
-          fi
-
-          if [[ -n "$OS_NAME" && -n "$ARCH_NAME" ]]; then
-            ARCHIVE_PATTERN="MFAAvalonia-*-${OS_NAME}-${ARCH_NAME}*"
-            echo "Attempting to remove downloaded archive matching: ${ARCHIVE_PATTERN}"
-            rm -f ${ARCHIVE_PATTERN}
-            echo "Archive cleanup command executed for MFAAvalonia on Unix."
-          else
-            echo "OS or Arch name not determined for this matrix combination, skipping MFAAvalonia archive cleanup."
-          fi
-
-      - name: Install
+      - name: Install on Linux
         shell: bash
         run: |
-          python ./tools/install.py ${{ needs.meta.outputs.tag }}
-
+          PYTHON_EXECUTABLE="python"
+          echo "Using Python executable: $PYTHON_EXECUTABLE for Linux"
+          $PYTHON_EXECUTABLE ./tools/install.py ${{ needs.meta.outputs.tag }}
           if [ -d "MFA" ]; then
-            echo "Copying MFA files to install directory..."
+            echo "Copying MFA files to install directory on Linux..."
             mkdir -p install
             rsync -av --ignore-existing MFA/ install/
           else
-            echo "MFA directory not found, skipping copy."
+            echo "MFA directory not found on Linux, skipping copy."
           fi
 
       - uses: actions/upload-artifact@v4
         with:
-          name: M9A-${{ matrix.os == 'ubuntu-latest' && 'linux' || 'macos' }}-${{ matrix.arch }}
+          name: M9A-linux-${{ matrix.arch }}
+          path: "install"
+
+  macos:
+    needs: meta
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        arch: [aarch64, x86_64]
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Download MaaFramework for macOS
+        uses: robinraju/release-downloader@v1
+        with:
+          repository: MaaXYZ/MaaFramework
+          fileName: "MAA-macos-${{ matrix.arch }}*"
+          latest: true
+          preRelease: true
+          out-file-path: "deps"
+          extract: true
+
+      - name: Download MFAAvalonia for macOS
+        id: download_mfa
+        uses: robinraju/release-downloader@v1
+        with:
+          repository: SweetSmellFox/MFAAvalonia
+          fileName: "MFAAvalonia-*-osx-${{ matrix.arch == 'x86_64' && 'x64' || 'arm64' }}*"
+          latest: true
+          out-file-path: "MFA"
+          extract: true
+
+      - name: Clean up MFAAvalonia archive on macOS
+        shell: bash
+        run: |
+          ARCHIVE_FILE_PATH="${{ fromJson(steps.download_mfa.outputs.downloaded_files)[0] }}"
+          rm -f "${ARCHIVE_FILE_PATH}"
+          echo "Archive cleanup command executed for MFAAvalonia on macOS."
+
+      - name: Setup Embed Python on macOS
+        shell: bash
+        run: |
+          python3 tools/ci/setup_embed_python.py
+
+      - name: Install on macOS
+        shell: bash
+        run: |
+          PYTHON_EXECUTABLE="./install/python/bin/python3"
+          echo "Using Python executable: $PYTHON_EXECUTABLE for macOS"
+          $PYTHON_EXECUTABLE ./tools/install.py ${{ needs.meta.outputs.tag }}
+
+          if [ -d "MFA" ]; then
+            echo "Copying MFA files to install directory on macOS..."
+            mkdir -p install
+            rsync -av --ignore-existing MFA/ install/ # Using rsync like on Linux
+          else
+            echo "MFA directory not found on macOS, skipping copy."
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: M9A-macos-${{ matrix.arch }}
           path: "install"
 
   changelog:
@@ -222,7 +266,7 @@ jobs:
 
   release:
     if: ${{ needs.meta.outputs.is_release == 'true' }}
-    needs: [meta, windows, unix, changelog]
+    needs: [meta, windows, linux, macos, changelog]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
