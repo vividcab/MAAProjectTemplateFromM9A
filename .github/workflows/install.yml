@@ -82,14 +82,22 @@ jobs:
           out-file-path: "deps"
           extract: true
 
-      - name: Download MFAAvalonia  
-        uses: robinraju/release-downloader@v1  
+      - name: Download MFAAvalonia
+        uses: robinraju/release-downloader@v1
         with:
           repository: SweetSmellFox/MFAAvalonia
           fileName: "MFAAvalonia-*-win-x64*"
           latest: true
           out-file-path: "MFA"
           extract: true
+
+      - name: Clean up MFAAvalonia archive on Windows
+        shell: bash
+        run: |
+          ARCHIVE_PATTERN="MFAAvalonia-*-win-x64*"
+          echo "Attempting to remove downloaded archive matching: ${ARCHIVE_PATTERN}"
+          rm -f ${ARCHIVE_PATTERN}
+          echo "Archive cleanup command executed for MFAAvalonia on Windows."
 
       - name: Setup Embed Python
         shell: powershell
@@ -138,8 +146,8 @@ jobs:
           out-file-path: "deps"
           extract: true
 
-      - name: Download MFAAvalonia  
-        uses: robinraju/release-downloader@v1  
+      - name: Download MFAAvalonia
+        uses: robinraju/release-downloader@v1
         with:
           repository: SweetSmellFox/MFAAvalonia
           fileName: "MFAAvalonia-*-${{ matrix.os == 'ubuntu-latest' && 'linux' || 'osx' }}-${{ matrix.arch == 'x86_64' && 'x64' || 'arm64' }}*"
@@ -147,21 +155,43 @@ jobs:
           out-file-path: "MFA"
           extract: true
 
+      - name: Clean up MFAAvalonia archive on Unix
+        shell: bash
+        run: |
+          OS_NAME=""
+          if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
+            OS_NAME="linux"
+          elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+            OS_NAME="osx"
+          fi
+
+          ARCH_NAME=""
+          if [[ "${{ matrix.arch }}" == "x86_64" ]]; then
+            ARCH_NAME="x64"
+          elif [[ "${{ matrix.arch }}" == "aarch64" ]]; then
+            ARCH_NAME="arm64"
+          fi
+
+          if [[ -n "$OS_NAME" && -n "$ARCH_NAME" ]]; then
+            ARCHIVE_PATTERN="MFAAvalonia-*-${OS_NAME}-${ARCH_NAME}*"
+            echo "Attempting to remove downloaded archive matching: ${ARCHIVE_PATTERN}"
+            rm -f ${ARCHIVE_PATTERN}
+            echo "Archive cleanup command executed for MFAAvalonia on Unix."
+          else
+            echo "OS or Arch name not determined for this matrix combination, skipping MFAAvalonia archive cleanup."
+          fi
+
       - name: Install
         shell: bash
         run: |
           python ./tools/install.py ${{ needs.meta.outputs.tag }}
 
-          if [[ "${{ matrix.os }}" != "android" ]]; then
-            if [ -d "MFA" ]; then
-              echo "Copying MFA files to install directory..."
-              mkdir -p install
-              rsync -av --ignore-existing MFA/ install/
-            else
-              echo "MFA directory not found, skipping copy."
-            fi
+          if [ -d "MFA" ]; then
+            echo "Copying MFA files to install directory..."
+            mkdir -p install
+            rsync -av --ignore-existing MFA/ install/
           else
-            echo "Skipping copy MFA for Android."
+            echo "MFA directory not found, skipping copy."
           fi
 
       - uses: actions/upload-artifact@v4
