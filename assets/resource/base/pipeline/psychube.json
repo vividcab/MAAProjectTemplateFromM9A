@@ -22,7 +22,8 @@
         ],
         "action": "Click",
         "next": [
-            "PsychubeReadyForAction"
+            "PsychubeReadyForAction",
+            "FreePsychube"
         ],
         "interrupt": [
             "PsychubeStage07"
