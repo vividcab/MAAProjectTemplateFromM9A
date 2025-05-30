@@ -735,7 +735,8 @@
         "action": "Click",
         "next": [
             "AllIn",
-            "OpenReplaysTimes"
+            "OpenReplaysTimes",
+            "SwitchToReplay"
         ]
     },
     "OpenReplaysTimes": {
