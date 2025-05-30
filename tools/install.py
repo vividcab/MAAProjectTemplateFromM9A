@@ -89,6 +89,8 @@ def install_agent():
         interface["agent"]["child_exec"] = r"{PROJECT_DIR}/python/python.exe"
     elif sys.platform.startswith("darwin"):
         interface["agent"]["child_exec"] = r"{PROJECT_DIR}/python/bin/python3"
+    elif sys.platform.startswith("linux"):
+        interface["agent"]["child_exec"] = r"python3"
 
     interface["agent"]["child_args"] = [r"{PROJECT_DIR}/agent/main.py", "-u"]
 
