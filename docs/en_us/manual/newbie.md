@@ -141,7 +141,7 @@ The game must run at **1280x720 resolution** inside the emulator. Configure this
 
 ### 7. Pip settings (Windows)
 
-For Windows, we provide a Python environment for the convenience of most users. However, considering the minimum size of the installation package, we choose to use pip to install all dependencies when the program is first run locally or when the resource version is updated. The relevant configuration file is stored in `config/pip_config.json` (if it does not exist, it will be automatically created). The content is as follows:
+Content in `config/pip_config.json` :
 
 ```jsonc
 {
