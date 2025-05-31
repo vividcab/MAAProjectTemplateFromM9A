@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 import sys
 import json
@@ -172,21 +174,22 @@ def _run_pip_command(cmd_args: list, operation_name: str) -> bool:
             stderr=subprocess.PIPE,
             text=True,
             encoding="utf-8",
+            errors="replace",
         )
         stdout, stderr = process.communicate()
 
         if process.returncode == 0:
             logger.info(f"{operation_name} 完成")
-            if stdout.strip():
+            if stdout and stdout.strip():
                 logger.debug(
                     f"{operation_name} 标准输出:\n{stdout.strip()}"
                 )  # 仅当stdout不为空时记录
             return True
         else:
             logger.error(f"{operation_name} 时出错。返回码: {process.returncode}")
-            if stdout.strip():
+            if stdout and stdout.strip():
                 logger.error(f"{operation_name} 标准输出:\n{stdout.strip()}")
-            if stderr.strip():
+            if stderr and stderr.strip():
                 logger.error(f"{operation_name} 标准错误:\n{stderr.strip()}")
             return False
     except Exception as e:
