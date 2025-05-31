@@ -184,6 +184,30 @@ jobs:
             echo "MFA directory not found on Linux, skipping copy."
           fi
 
+      - name: Set execute permissions for main executables on Linux
+        shell: bash
+        run: |
+          MAAPICLI_PATH="install/MaaPiCli"
+          MFAAVALONIA_EXECUTABLE_PATH="install/MFAAvalonia"
+
+          echo "Attempting to set 'a+x' permissions..."
+
+          if [ -f "$MAAPICLI_PATH" ]; then
+            echo "Setting 'a+x' permission for $MAAPICLI_PATH"
+            chmod a+x "$MAAPICLI_PATH"
+            echo "Permissions for $MAAPICLI_PATH are now: $(ls -l $MAAPICLI_PATH)"
+          else
+            echo "Warning: MaaPiCli not found at $MAAPICLI_PATH. Cannot set permissions."
+          fi
+
+          if [ -f "$MFAAVALONIA_EXECUTABLE_PATH" ]; then
+            echo "Setting 'a+x' permission for $MFAAVALONIA_EXECUTABLE_PATH"
+            chmod a+x "$MFAAVALONIA_EXECUTABLE_PATH"
+            echo "Permissions for $MFAAVALONIA_EXECUTABLE_PATH are now: $(ls -l $MFAAVALONIA_EXECUTABLE_PATH)"
+          else
+            echo "Warning: MFAAvalonia executable not found at $MFAAVALONIA_EXECUTABLE_PATH. Cannot set permissions."
+          fi
+
       - uses: actions/upload-artifact@v4
         with:
           name: M9A-linux-${{ matrix.arch }}
@@ -253,6 +277,31 @@ jobs:
             rsync -av --ignore-existing MFA/ install/ # Using rsync like on Linux
           else
             echo "MFA directory not found on macOS, skipping copy."
+          fi
+
+      - name: Set execute permissions for main executables on macOS
+        shell: bash
+        run: |
+          MAAPICLI_PATH="install/MaaPiCli"
+          MFAAVALONIA_EXECUTABLE_PATH="install/MFAAvalonia"
+
+          echo "Attempting to set 'a+x' permissions..."
+
+          if [ -f "$MAAPICLI_PATH" ]; then
+            echo "Setting 'a+x' permission for $MAAPICLI_PATH"
+            chmod a+x "$MAAPICLI_PATH"
+            echo "Permissions for $MAAPICLI_PATH are now: $(ls -l $MAAPICLI_PATH)"
+          else
+            echo "Warning: MaaPiCli not found at $MAAPICLI_PATH. Cannot set permissions."
+          fi
+
+          if [ -f "$MFAAVALONIA_EXECUTABLE_PATH" ]; then
+            echo "Setting 'a+x' permission for $MFAAVALONIA_EXECUTABLE_PATH"
+            chmod a+x "$MFAAVALONIA_EXECUTABLE_PATH"
+            echo "Permissions for $MFAAVALONIA_EXECUTABLE_PATH are now: $(ls -l $MFAAVALONIA_EXECUTABLE_PATH)"
+          else
+            echo "Warning: MFAAvalonia executable not found at $MFAAVALONIA_EXECUTABLE_PATH."
+            echo "Please ensure the path is correct. If it's an app bundle, the path to the actual executable inside the bundle should be used."
           fi
 
       - uses: actions/upload-artifact@v4
