@@ -58,6 +58,7 @@ Powered by [MaaFramework](https://github.com/MaaXYZ/MaaFramework)!
 - [Interface.json writing](./docs/en_us/develop/Writing-interface.json.md)
 - [Pipeline writing](./docs/en_us/develop/Writing-Pipelines.md)
 - [Custom Writing](./docs/en_us/develop/Writing-Custom.md)
+- [Bug Troubleshooting](./docs/en_us/develop/Bug-Troubleshooting.md)
 - [Project Refactoring](./docs/en_us/develop/Project-Refactoring.md)
 - [Adapting Global Servers](./docs/en_us/develop/Adapting-Global-Servers.md)
 - [Document Writing](./docs/en_us/develop/Writing-Documentation.md)

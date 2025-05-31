@@ -60,6 +60,7 @@
 - [interface.json编写](./docs/zh_cn/develop/interface.json编写.md)
 - [Pipeline编写](./docs/zh_cn/develop/Pipeline编写.md)
 - [Custom编写](./docs/zh_cn/develop/Custom编写.md)
+- [Bug排查](./docs/zh_cn/develop/Bug排查.md)
 - [项目重构](./docs/zh_cn/develop/项目重构.md)
 - [外服适配](./docs/zh_cn/develop/外服适配.md)
 - [文档编写](./docs/zh_cn/develop/文档编写.md)
