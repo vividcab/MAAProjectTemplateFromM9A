@@ -139,6 +139,10 @@ M9A relies on emulators. Supported emulators are generally listed in the [List o
 
 The game must run at **1280x720 resolution** inside the emulator. Configure this in the emulator's display settings. Incorrect resolution is a common cause of recognition failures.
 
+>[!WARNING]
+>
+> Note that after changing the resolution, the simulator homepage should be horizontal (tablet version), do not select vertical (mobile version)!
+
 ### 7. Pip settings (Windows)
 
 Content in `config/pip_config.json` :
