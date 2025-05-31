@@ -8,13 +8,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - run: |
           echo "检测到 .md 文件变更！"
           curl -L \
             -X POST \
-            -H "Authorization: Bearer ${{ github.token }}" \
+            -H "Authorization: Bearer ${{ secrets.pat }}" \
             -d '{"event_type":"md_changes"}' \
             "https://api.github.com/repos/MAA1999/M9A-WEB/dispatches"
