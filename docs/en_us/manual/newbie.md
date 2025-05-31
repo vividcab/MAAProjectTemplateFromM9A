@@ -5,13 +5,14 @@
     - [1. Confirm System Version](#1-confirm-system-version)
     - [2. Install Runtime Environment](#2-install-runtime-environment)
       - [Windows](#windows)
-      - [Other Systems](#other-systems)
-        - [Environment Dependencies](#environment-dependencies)
-        - [Dependency Management](#dependency-management)
+      - [Other Systems (Linux, macOS)](#other-systems-linux-macos)
+        - [Linux](#linux)
+        - [macOS](#macos)
+        - [Additional dependencies for the graphical user interface (MFAAvalonia) (applicable to Linux and macOS)](#additional-dependencies-for-the-graphical-user-interface-mfaavalonia-applicable-to-linux-and-macos)
     - [3. Download the Correct Version](#3-download-the-correct-version)
       - [Windows](#windows-1)
-      - [macOS](#macos)
-      - [Linux](#linux)
+      - [macOS](#macos-1)
+      - [Linux](#linux-1)
       - [Android](#android)
     - [4. Extract Correctly](#4-extract-correctly)
     - [5. Confirm Emulator Support](#5-confirm-emulator-support)
@@ -39,19 +40,42 @@ If you wish to use M9A on Android devices, please go to [this page](https://maa.
 
 #### Windows
 
-M9A requires the [VCRedist x64](https://aka.ms/vs/17/release/vc_redist.x64.exe) and the [dotnet-sdk-8.0.5-win-x64.exe](https://download.visualstudio.microsoft.com/download/pr/ba3a1364-27d8-472e-a33b-5ce0937728aa/6f9495e5a587406c85af6f93b1c89295/dotnet-sdk-8.0.404-win-x64.exe) if you are running Windows x64. Try installing runtime environment manually if you are running other versions of Windows..
+For Windows users:
 
-#### Other Systems
+  1. **VCRedist x64 must be installed**: This is the basic requirement for running M9A (whether it is the command line version or the graphical interface version MFAAvalonia).
 
-Refer to the MAA documentation for dependencies on other systems as M9A primarily targets Windows, but the core framework might have cross-platform capabilities. Check M9A's specific documentation or repository for Linux/macOS support details if available.
+     - Click [vc_redist.x64](https://aka.ms/vs/17/release/vc_redist.x64.exe) to download and install.
 
-##### Environment Dependencies
+  2. **If you use the graphical interface (MFAAvalonia), you need to install .NET 8**:
 
-Python: version ≥ 3.10
+     - It is recommended to visit the [.NET official download page](https://dotnet.microsoft.com/download/dotnet/8.0) and download and install the **.NET Desktop Runtime 8** that is suitable for your system (usually the x64 version).
 
-##### Dependency Management
+**Installation via `winget` (recommended)**:
+You can also right-click the Windows Start button, select "Command Prompt" or "PowerShell (Administrator)", and then paste the following command in the terminal and press Enter to conveniently install VCRedist x64 and .NET 8 Desktop Runtime at the same time:
 
-Make sure your environment satisfy all necessary dependencies and their versions listed in the requirements.txt file.
+```sh
+winget install Microsoft.VCRedist.2017.x64 Microsoft.DotNet.DesktopRuntime.8
+```
+
+#### Other Systems (Linux, macOS)
+
+##### Linux
+
+**Python Version Dependency**:
+
+- Your system needs to have **Python version ≥ 3.10** installed. This is required for M9A to start and manage its internal environment.
+- M9A will automatically create and use an independent virtual environment and install the required Python dependency packages (from `requirements.txt`) when it is run for the first time. You **do not** need to manually create a virtual environment or install these dependencies.
+
+##### macOS
+
+**Python environment**: The macOS version of M9A has a built-in embedded Python environment, so you **do not** need to install or configure Python separately. The program will automatically use this embedded environment and manage its dependencies.
+
+##### Additional dependencies for the graphical user interface (MFAAvalonia) (applicable to Linux and macOS)
+
+If you plan to use the graphical user interface (MFAAvalonia) on Linux or macOS, **you also need to install the .NET 8 runtime**.
+
+- Please visit the [.NET official download page](https://dotnet.microsoft.com/download/dotnet/8.0).
+- Select and download and install the appropriate **.NET Runtime** according to your operating system (Linux/macOS) and CPU architecture (e.g. x64, Arm64).
 
 ### 3. Download the Correct Version
 
@@ -89,7 +113,6 @@ Usually, download the `M9A-win-x64-<version>.zip` file.
      ```shell
      cd usr/local/bin/M9A
      # If you manually open the terminal in the root directory of the decompressed software, you can skip the above line.
-     sudo chmod 777 MaaPiCli
      sudo ./MaaPiCli
      ```
 
@@ -97,12 +120,12 @@ Usually, download the `M9A-win-x64-<version>.zip` file.
   
 #### Linux
 
-Same as MacOS. Download and grant execute permissions to use MaaPiCli.
+Same as MacOS. Download and grant execute permissions to use `MaaPiCli` or `MFAAvalonia`.
 
 #### Android
 
 ~~This version is not recommended for general users and has been removed from the release version.~~
-If you are very familiar with mobile phone operation, you can refer to the [Usage Method](https://github.com/MaaXYZ/MaaFramework/issues/475) and the [Development Documentation](../develop/开发前须知.md) to install it yourself.
+If you are very familiar with mobile phone operation, you can refer to the [Usage Method](https://github.com/MaaXYZ/MaaFramework/issues/475) and the [Development Documentation](../develop/Notes-Before-Development.md) to install it yourself.
 
 ### 4. Extract Correctly
 
