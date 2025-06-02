@@ -4,7 +4,8 @@
 # M9A
 
 Reverse: 1999 assistant based on a new architecture. Image technology + analog control, free your hands!  
-Powered by [MaaFramework](https://github.com/MaaXYZ/MaaFramework)!
+Powered by [MaaFramework](https://github.com/MaaXYZ/MaaFramework)!  
+<a href="https://github.com/MAA1999/M9A" target="_blank" style="font-weight: bold;">🔗 This project's GitHub repository</a>
 
 </div>
 
