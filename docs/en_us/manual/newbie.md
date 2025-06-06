@@ -81,7 +81,7 @@ If you plan to use the graphical user interface (MFAAvalonia) on Linux or macOS,
 
 Download from the [M9A Releases page](https://github.com/MAA1999/M9A/releases).
 
-Chinese Mainland users can also download it at high speed through [MirrorChyan](https://mirrorchyan.com/en/download?rid=M9A).
+Chinese Mainland users can also download it at high speed through [MirrorChyan](https://mirrorchyan.com/en/download?rid=M9A?source=m9agh-enmd3).
 
 #### Windows
 
