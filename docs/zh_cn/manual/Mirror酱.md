@@ -23,7 +23,7 @@ Mirror酱是一个第三方应用分发平台，让开源应用的更新更简�
 [查询CDK](https://mirrorchyan.com/zh/get-key),购买后需通过订单号（**注意这里和下面都是指商家订单号**）查询CDK，这个码才能使用。
 [查询订单号](https://afdian.com/dashboard/order)，不知道订单号的可以由此进入，或者直接在支付渠道（如支付宝）中的订单查看。
 3. 下载 M9A 全量包
-[下载链接](https://mirrorchyan.com/zh/projects?rid=M9A?source=m9agh-md2)
+[下载链接](https://mirrorchyan.com/zh/projects?rid=M9A&source=m9agh-md2)
 4. 订单转换（兑换码兑换也在这里）
 [订单转换](https://mirrorchyan.com/zh/transfer)，左边放旧订单号/兑换码，右边放要转移到的新订单号，以此将剩余有效时间转换到新订单号上。
 5. 交流反馈
