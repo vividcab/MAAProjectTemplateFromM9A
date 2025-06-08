@@ -53,7 +53,7 @@ class LucidscapeStageSelect(CustomAction):
                 score = match.group(1)
                 score = int(score)
                 logger.debug(f"score: {score}")
-                if score == 0:
+                if score <= max - 80:
                     break
             stage += 1
 
