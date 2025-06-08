@@ -1,0 +1,40 @@
+{
+    "SwitchAccountMainFlag": {
+        "roi": [
+            513,
+            91,
+            254,
+            142
+        ]
+    },
+    "SwitchAccountMainExpandFlag": {
+        "roi": [
+            680,
+            278,
+            185,
+            354
+        ]
+    },
+    "SwitchAccountMainExpand": {
+        "roi": [
+            753,
+            241,
+            118,
+            113
+        ]
+    },
+    "SwitchLastAccountComplete": {
+        "expected": "登录[^次分钟]*$"
+    },
+    "LogIn": {
+        "expected": "登录[^次分钟]*$"
+    },
+    "SwitchLastAccount": {
+        "roi": [
+            680,
+            278,
+            185,
+            354
+        ]
+    }
+}
