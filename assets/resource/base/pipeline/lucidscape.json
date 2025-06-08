@@ -173,7 +173,7 @@
         ],
         "only_rec": true,
         "action": "Click",
-        "timeout": 60000,
+        "timeout": 300000,
         "rate_limit": 10000,
         "next": [
             "LucidscapeFailed",
