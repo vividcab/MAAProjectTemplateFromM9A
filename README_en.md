@@ -40,7 +40,7 @@ Powered by [MaaFramework](https://github.com/MaaXYZ/MaaFramework)!
 - Suspended in the rain: Mystery Sea ("Searching" Weekly Sweep)
 - Outsider interpretation: Echo of the foothills (meat pigeon)
 - Friendly Match
-- When the Alarm Sounds: Daily
+- When the Alarm Sounds
 - Continuous clear (under testing)
 
 ## Instructions for use
