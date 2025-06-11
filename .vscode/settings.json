@@ -26,6 +26,9 @@
     "files.exclude": {
         "__pycache__": true
     },
+    "files.associations": {
+        "**/assets/**/*.json": "jsonc"
+    },
     "[json]": {
         "editor.formatOnSave": true,
         "editor.insertSpaces": true,
