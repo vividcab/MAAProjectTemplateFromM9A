@@ -37,17 +37,7 @@ class DuringAct(CustomAction):
             item = data[key]
             if now < item["activity"]["combat"]["end_time"]:
                 if now > item["activity"]["combat"]["start_time"]:
-                    if item["activity"]["combat"]["event_type"] == "MainStory":
-                        context.override_next("JudgeDuringAct", [])
-                        logger.info(f"当前主线版本：{key} {item['version_name']}")
-                        logger.info(
-                            f"距离版本结束还剩 {ms_timestamp_diff_to_dhm(now, item['end_time'])}，跳过当前任务"
-                        )
-                        return CustomAction.RunResult(success=True)
-                    logger.info(f"当前版本：{key} {item['version_name']}")
-                    logger.info(
-                        f"距离作战结束还剩 {ms_timestamp_diff_to_dhm(now, item['activity']['combat']['end_time'])}"
-                    )
+                    # 进行复刻时间判断节点的资源字段覆盖
                     context.override_pipeline(
                         {
                             "JudgeDuringRe_release": {
@@ -55,10 +45,26 @@ class DuringAct(CustomAction):
                             }
                         }
                     )
+                    # 若为主线版本，将 "ActivityMainChapter" 设为不可用
+                    if item["activity"]["combat"]["event_type"] == "MainStory":
+                        context.override_pipeline(
+                            {"ActivityMainChapter": {"enabled": False}}
+                        )
+                        logger.info(f"当前为主线版本：{key} {item['version_name']}")
+                        logger.info(
+                            f"距离版本结束还剩 {ms_timestamp_diff_to_dhm(now, item['end_time'])}"
+                        )
+                        logger.info("如果您需要刷取主线关卡，请改用常规作战功能")
+                        return CustomAction.RunResult(success=True)
+                    # 若为活动版本，做一些可能的覆盖
                     if item["activity"]["combat"].get("override"):
                         context.override_pipeline(
                             item["activity"]["combat"].get("override")
                         )
+                    logger.info(f"当前版本：{key} {item['version_name']}")
+                    logger.info(
+                        f"距离作战结束还剩 {ms_timestamp_diff_to_dhm(now, item['activity']['combat']['end_time'])}"
+                    )
                     return CustomAction.RunResult(success=True)
                 continue
             break
@@ -145,15 +151,17 @@ class DuringRe_release(CustomAction):
                         logger.info(
                             f"距离复刻作战结束还剩 {ms_timestamp_diff_to_dhm(now, item['activity']['re-release']['end_time'])}"
                         )
+                        # 当前为合法复刻作战时间，且复刻模式开启，进行相关覆盖
                         context.override_pipeline(
                             {
+                                "ActivityMainChapter": {"enabled": True},
                                 "ActivityRe_releaseChapter": {
                                     "custom_recognition_param": {
                                         "Re_release_name": item["activity"][
                                             "re-release"
                                         ]["alias"]
                                     }
-                                }
+                                },
                             }
                         )
                         if item["activity"]["re-release"].get("override"):
