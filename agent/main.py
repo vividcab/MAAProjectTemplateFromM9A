@@ -312,11 +312,12 @@ def update_pip_config_last_version(version: str) -> bool:
 
 def agent():
     try:
+        from utils import logger
+
         from maa.agent.agent_server import AgentServer
         from maa.toolkit import Toolkit
 
         import custom
-        from utils import logger
 
         Toolkit.init_option("./")
 
