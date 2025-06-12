@@ -105,7 +105,6 @@ def read_pip_config() -> dict:
     config_dir.mkdir(exist_ok=True)
     config_path = config_dir / "pip_config.json"
     default_config = {
-        "enable_pip_update": True,
         "enable_pip_install": True,
         "last_version": "unknown",
         "mirror": "https://mirrors.ustc.edu.cn/pypi/simple",
@@ -223,38 +222,13 @@ def install_requirements(req_file="requirements.txt", pip_config=None) -> bool:
     return _run_pip_command(cmd, f"从 {req_path.name} 安装依赖")
 
 
-def update_pip(pip_config=None):
-    mirror = get_available_mirror(pip_config)
-    if not mirror:
-        logger.error("没有可用的镜像源，无法更新 pip")
-        return False
-
-    cmd = [
-        sys.executable,
-        "-m",
-        "pip",
-        "install",
-        "--upgrade",
-        "pip",
-        "--no-warn-script-location",
-        "-i",
-        mirror,
-    ]
-    return _run_pip_command(cmd, "更新 pip")
-
-
 def check_and_install_dependencies():
     pip_config = read_pip_config()
-    enable_pip_update = pip_config.get("enable_pip_update", True)
     enable_pip_install = pip_config.get("enable_pip_install", True)
 
     logger.info(f"当前用于依赖安装的Python解释器: {sys.executable}")
     if sys.platform.startswith("linux"):
         logger.info(f"在虚拟环境 ({VENV_DIR}) 中运行: {_is_running_in_our_venv()}")
-
-    if enable_pip_update:
-        if not update_pip(pip_config=pip_config):
-            logger.warning("pip 更新失败，继续尝试安装依赖...")
 
     current_version = read_interface_version()
     last_version = pip_config.get("last_version", "unknown")
