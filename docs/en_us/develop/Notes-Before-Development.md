@@ -48,11 +48,7 @@ Check out the [GitHub Pull Request Guide for Beginners](https://maa.plus/docs/zh
 
 6. Local installation
 
-   1. Install embedded python (only required for Windows)
-
-      ```bash
-      ./tools/ci/setup_embed_python.ps1
-      ```
+   1. Install python(≥3.10)
 
    2. Assemble components by running install
 
