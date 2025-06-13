@@ -97,26 +97,56 @@ Usually, download the `M9A-win-x64-<version>.zip` file.
   2. Select "About This Mac".
   3. In the window that appears, you can see the processor information.
 
-- If you are using an Intel X86 processor, please download `M9A-macos-x86_64-vXXX.zip`
-- If you are using an Apple Silicon series processor such as M1, M2, etc. with ARM architecture, please download `M9A-macos-aarch64-vXXX.zip`
+- If you are using an Intel X86 processor, please download `M9A-macos-x86_64-vXXX.tar.gz`
+- If you are using an Apple Silicon series processor such as M1, M2, etc. with ARM architecture, please download `M9A-macos-aarch64-vXXX.tar.gz`
 
 - Usage:
 
-  1. Open the terminal, decompress the distributed compressed package. It is recommended to decompress it to `usr/local/bin`. It is not recommended to store it in `/opt` to avoid permission issues.
+  1. Open the terminal, decompress the distributed compressed package:
+
+     **Option 1: Unzip to the system directory (administrator privileges required)**
 
      ```shell
-     sudo unzip -o <path to the downloaded M9A compressed package> -d usr/local/bin/M9A
+     sudo mkdir -p /usr/local/bin/M9A
+     sudo tar -xzf <downloaded M9A compressed package path> -C /usr/local/bin/M9A
      ```
 
-  2. Continue in the terminal to grant execute permissions to the UNIX executable file:
+     **Option 2: Unzip to the user directory (recommended, no sudo required)**
 
      ```shell
-     cd usr/local/bin/M9A
-     # If you manually open the terminal in the root directory of the decompressed software, you can skip the above line.
+     mkdir -p ~/M9A
+     tar -xzf <downloaded M9A compressed package path> -C ~/M9A
+     ```
+
+  2. Enter the unzip directory and run the program:
+
+     ```shell
+     cd /usr/local/bin/M9A
      sudo ./MaaPiCli
      ```
 
-  3. If you want to use the graphical operation interface, please follow step 2 and execute the `MFAAvalonia` program.
+>[!NOTE]
+>
+> If you want to use the **graphic operation page**, please follow the second step and execute `MaaPiCli` Execute the `MFAAvalonia` program instead.
+
+⚠️Gatekeeper security prompt handling:
+
+In macOS 10.15 (Catalina) and later, Gatekeeper may prevent unsigned applications from running.
+If you encounter errors such as "Cannot open because the developer cannot be verified", please choose one of the following solutions:
+
+  ```shell
+  # Solution 1: Take MaaPiCli as an example to remove the quarantine attribute (recommended, subject to the actual path)
+  sudo xattr -rd com.apple.quarantine /usr/local/bin/M9A/MaaPiCli
+  # Or user directory version: xattr -rd com.apple.quarantine ~/M9A/MaaPiCli
+
+  # Solution 2: Add to Gatekeeper whitelist
+  sudo spctl --add /usr/local/bin/M9A/MaaPiCli
+  # Or user directory version: spctl --add ~/M9A/MaaPiCli
+
+  # Solution 3: Process the entire directory at once
+  sudo xattr -rd com.apple.quarantine /usr/local/bin/M9A/*
+  # Or user directory version: xattr -rd com.apple.quarantine ~/M9A/*
+  ```
   
 #### Linux
 
