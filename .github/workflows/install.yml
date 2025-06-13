@@ -342,7 +342,11 @@ jobs:
       - run: |
           cd assets
           for f in *; do
-            (cd $f && zip -r ../$f-${{ needs.meta.outputs.tag }}.zip .)
+            if [[ $f == *"win"* ]]; then
+              (cd $f && zip -r ../$f-${{ needs.meta.outputs.tag }}.zip .)
+            else
+              tar -czf $f-${{ needs.meta.outputs.tag }}.tar.gz -C $f .
+            fi
           done
 
       - uses: softprops/action-gh-release@v2.2.2
