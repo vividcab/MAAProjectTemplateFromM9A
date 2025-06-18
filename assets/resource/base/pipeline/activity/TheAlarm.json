@@ -57,7 +57,7 @@
     "Alarm_Complete": {
         "recognition": "TemplateMatch",
         "template": [
-            "Combat\\Activity\\complete.png"
+            "Combat/Activity/complete.png"
         ],
         "threshold": 0.6,
         "pre_delay": 1000,
@@ -97,7 +97,7 @@
     "Alarm_FindStageFlag": {
         "recognition": "TemplateMatch",
         "template": [
-            "Combat\\Activity\\stage_flag.png"
+            "Combat/Activity/stage_flag.png"
         ],
         "green_mask": true,
         "threshold": 0.55

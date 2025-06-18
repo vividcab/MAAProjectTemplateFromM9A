@@ -79,7 +79,7 @@
     },
     "进入事件": {
         "recognition": "TemplateMatch",
-        "template": "Combat\\Activity\\Next_Flag.png",
+        "template": "Combat/Activity/Next_Flag.png",
         "roi": [
             1090,
             552,
