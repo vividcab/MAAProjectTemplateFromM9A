@@ -231,7 +231,6 @@ jobs:
           repository: MaaXYZ/MaaFramework
           fileName: "MAA-macos-${{ matrix.arch }}*"
           latest: true
-          preRelease: true
           out-file-path: "deps"
           extract: true
 
