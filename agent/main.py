@@ -257,15 +257,25 @@ def check_and_install_dependencies():
 
 def read_interface_version(interface_file_name="./interface.json") -> str:
     interface_path = Path(project_root_dir) / interface_file_name
-    if not interface_path.exists():
-        logger.warning("interface.json不存在")
+    assets_interface_path = Path(project_root_dir) / "assets" / interface_file_name
+
+    target_path = None
+    if interface_path.exists():
+        target_path = interface_path
+    elif assets_interface_path.exists():
+        logger.info("当前处于开发模式")
         return "unknown"
+
+    if target_path is None:
+        logger.warning("未找到interface.json")
+        return "unknown"
+
     try:
-        with open(interface_path, "r", encoding="utf-8") as f:
+        with open(target_path, "r", encoding="utf-8") as f:
             interface_data = json.load(f)
             return interface_data.get("version", "unknown")
     except Exception:
-        logger.exception("读取interface.json版本失败")
+        logger.exception(f"读取interface.json版本失败，文件路径：{target_path}")
         return "unknown"
 
 
