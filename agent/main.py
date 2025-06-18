@@ -150,10 +150,10 @@ def get_available_mirror(pip_config: dict) -> str:
                 timeout=10,  # 检查超时时间
                 check=True,  # 对非零退出码抛出CalledProcessError
             )
-            logger.info(f"镜像源可用: {mirror}")
+            logger.info(f"当前镜像源可用")
             return mirror
         except subprocess.TimeoutExpired:
-            logger.warning(f"镜像源连接超时: {mirror}")
+            logger.warning(f"当前镜像源连接超时")
         except subprocess.CalledProcessError as e:
             logger.warning(
                 f"镜像源返回错误 (pip list命令失败，代码: {e.returncode}): {mirror}"
