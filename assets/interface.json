@@ -1232,6 +1232,36 @@
                     "pipeline_override": {
                         "ModifyBankTaskList": {
                             "action": "DoNothing"
+                        },
+                        "NoFree": {
+                            "next": []
+                        },
+                        "NoRabbit": {
+                            "next": []
+                        },
+                        "NoSmallGlobe": {
+                            "next": []
+                        },
+                        "NoTinyGlobe": {
+                            "next": []
+                        },
+                        "NoGluttony": {
+                            "next": []
+                        },
+                        "NoTinyGlobe(1)": {
+                            "next": []
+                        },
+                        "NoResonantCassette": {
+                            "next": []
+                        },
+                        "NoGoldenMelonSeeds": {
+                            "next": []
+                        },
+                        "NoOriginalChicken": {
+                            "next": []
+                        },
+                        "NoFries": {
+                            "next": []
                         }
                     }
                 }
