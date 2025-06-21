@@ -129,7 +129,6 @@ def read_pip_config() -> dict:
 def get_available_mirror(pip_config: dict) -> str:
     mirrors = [pip_config.get("mirror")] + pip_config.get("backup_mirrors", [])
     python_exe_to_use = sys.executable  # 在Linux上重新启动后将是venv的Python
-    logger.info(f"使用Python进行pip检查: {python_exe_to_use}")
 
     for mirror in filter(None, mirrors):  # 过滤掉None或空字符串
         try:
@@ -155,9 +154,7 @@ def get_available_mirror(pip_config: dict) -> str:
         except subprocess.TimeoutExpired:
             logger.warning(f"当前镜像源连接超时")
         except subprocess.CalledProcessError as e:
-            logger.warning(
-                f"镜像源返回错误 (pip list命令失败，代码: {e.returncode}): {mirror}"
-            )
+            logger.warning(f"镜像源返回错误 (代码: {e.returncode}): {mirror}")
         except Exception as e:  # 捕获其他潜在错误，如pip的FileNotFoundError
             logger.warning(f"检查镜像源时发生未知错误 {mirror}: {e}")
     logger.error("所有镜像源都不可用")
@@ -226,7 +223,6 @@ def check_and_install_dependencies():
     pip_config = read_pip_config()
     enable_pip_install = pip_config.get("enable_pip_install", True)
 
-    logger.info(f"当前用于依赖安装的Python解释器: {sys.executable}")
     if sys.platform.startswith("linux"):
         logger.info(f"在虚拟环境 ({VENV_DIR}) 中运行: {_is_running_in_our_venv()}")
 
@@ -234,9 +230,7 @@ def check_and_install_dependencies():
     last_version = pip_config.get("last_version", "unknown")
 
     logger.info(f"启用 pip 安装依赖: {enable_pip_install}")
-    logger.info(
-        f"当前 interface.json 版本: {current_version}, 上次运行版本 (来自 pip_config.json): {last_version}"
-    )
+    logger.info(f"当前资源版本: {current_version}, 上次运行版本: {last_version}")
 
     if enable_pip_install and (
         current_version != last_version or last_version == "unknown"
@@ -250,9 +244,7 @@ def check_and_install_dependencies():
     elif not enable_pip_install:
         logger.info("Pip 依赖安装已禁用。")
     else:
-        logger.info(
-            f"版本匹配 (当前: {current_version}, 上次: {last_version})，跳过依赖安装。"
-        )
+        logger.info(f"版本匹配，跳过依赖安装。")
 
 
 def read_interface_version(interface_file_name="./interface.json") -> str:
