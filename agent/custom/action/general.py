@@ -30,6 +30,14 @@ class Screenshot(CustomAction):
         # image array(BGR)
         screen_array = context.tasker.controller.post_screencap().wait().get()
 
+        # Check resolution aspect ratio
+        height, width = screen_array.shape[:2]
+        aspect_ratio = width / height
+        target_ratio = 16 / 9
+        # Allow small deviation (within 1%)
+        if abs(aspect_ratio - target_ratio) / target_ratio > 0.01:
+            logger.error(f"当前模拟器分辨率不是16:9! 当前分辨率: {width}x{height}")
+
         # BGR2RGB
         if len(screen_array.shape) == 3 and screen_array.shape[2] == 3:
             rgb_array = screen_array[:, :, ::-1]
