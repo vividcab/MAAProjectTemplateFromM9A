@@ -297,15 +297,19 @@ jobs:
               echo "Processing Unix artifact: $f"
 
               # 为主要可执行文件设置权限
+              # MaaPiCli
               if [[ -f "$f/MaaPiCli" ]]; then
                 chmod +x $f/MaaPiCli
                 echo "Set execute permission for $f/MaaPiCli"
               fi
 
-              if [[ -f "$f/MFAAvalonia" ]]; then
-                chmod +x $f/MFAAvalonia
-                echo "Set execute permission for $f/MFAAvalonia"
-              fi
+              # MFAAvalonia
+              find $f -type f -name "MFAAvalonia*" -exec chmod +x {} \; 2>/dev/null || true
+              echo "Set execute permission for all MFAAvalonia files"
+
+              # MFAUpdater
+              find $f -type f -name "MFAUpdater*" -exec chmod +x {} \; 2>/dev/null || true
+              echo "Set execute permission for all MFAUpdater files"
 
               # 为Python解释器设置执行权限 (处理不同可能的路径)
               PYTHON_PATHS=(
