@@ -17,7 +17,8 @@ body = """
     - {% if commit.scope %}*({{ commit.scope }})* {% endif %}\
         {% if commit.breaking %}[**breaking**] {% endif %}\
         {{ commit.message | upper_first }} \
-        @{{ author.login | default(value=commit.author.name) }}
+        @{{ author.login | default(value=commit.author.name) }}\
+        {% if commit.co_authors %}{% for co_author in commit.co_authors %} @{{ co_author.name }}{% endfor %}{% endif %}
 {% endmacro -%}
 
 {% if version %}\
