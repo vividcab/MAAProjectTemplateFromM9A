@@ -24,6 +24,12 @@
             ]
         },
         {
+            "name": "QQ 服",
+            "path": [
+                "{PROJECT_DIR}/resource/base"
+            ]
+        },
+        {
             "name": "OPPO 服",
             "path": [
                 "{PROJECT_DIR}/resource/base",
