@@ -19,7 +19,7 @@ jobs:
         if: ${{ github.repository_owner == 'MAA1999' }}
         with:
           filetype: latest-release
-          filename: "M9A-${{ matrix.os }}-${{ matrix.arch }}-*.zip"
+          filename: ${{ matrix.os == 'win' && format('M9A-{0}-{1}-*.zip', matrix.os, matrix.arch) || format('M9A-{0}-{1}-*.tar.gz', matrix.os, matrix.arch) }}
           mirrorchyan_rid: M9A
 
           github_token: ${{ secrets.GITHUB_TOKEN }}
