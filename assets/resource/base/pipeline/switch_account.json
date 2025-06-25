@@ -303,12 +303,7 @@
     "AccountExit": {
         "recognition": "OCR",
         "expected": "退出",
-        "roi": [
-            853,
-            514,
-            42,
-            22
-        ],
+        "roi": [796,500,161,53],
         "action": "Click",
         "post_wait_freezes": 1
     },
