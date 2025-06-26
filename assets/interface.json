@@ -165,7 +165,7 @@
         {
             "name": "切换账号",
             "entry": "SwitchAccount",
-            "doc": "[size:15][color:tomato]本功能仅会切换至最后一个账号（超过3个的账号会被忽略）[/color][/size]\n[size:15][color:tomato]切换后可继续添加任务，以便多账号多配置运行任务[/color][/size]"
+            "doc": "[size:15][color:tomato]本功能仅会切换至最后一个账号（超过3个的账号会被忽略）[/color][/size]\n[size:15][color:tomato]切换后可继续添加任务，以便多账号多配置运行任务[/color][/size]\n[size:15][color:tomato]目前该功能支持官服和b服，且建议使用该功能的用户将模拟器分辨率调至1280*720[/color][/size]"
         },
         {
             "name": "关闭游戏",
