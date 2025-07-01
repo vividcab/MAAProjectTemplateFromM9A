@@ -353,3 +353,89 @@ class SelectCombatStage(CustomAction):
         SelectCombatStage.mainStoryChapter = mainStoryChapter
 
         return CustomAction.RunResult(success=True)
+
+
+@AgentServer.custom_action("AllIn")
+class AllIn(CustomAction):
+    """
+    清空体力 。
+
+    参数格式:
+    {
+
+    }
+    """
+
+    def run(
+        self,
+        context: Context,
+        argv: CustomAction.RunArg,
+    ) -> CustomAction.RunResult:
+
+        def _safe_int(text):
+            try:
+                return int(text)
+            except Exception:
+                return 0
+
+        def _get_available_count():
+            img = context.tasker.controller.post_screencap().wait().get()
+            remaining_ap = _safe_int(
+                context.run_recognition("RecognizeRemainingAp", img).best_result.text
+            )
+            stage_ap = _safe_int(
+                context.run_recognition("RecognizeStageAp", img).best_result.text
+            )
+            combat_times = _safe_int(
+                context.run_recognition("RecognizeCombatTimes", img).best_result.text
+            )
+            if combat_times == 0 or stage_ap == 0:
+                logger.error("识别失败，combat_times 或 stage_ap 为0")
+                return 0
+            stage_ap = stage_ap // combat_times
+            logger.info(f"剩余体力: {remaining_ap}, 关卡体力: {stage_ap}")
+            available_count = remaining_ap // stage_ap if stage_ap else 0
+            return available_count
+
+        # target_count = json.loads(argv.custom_action_param)["target_count"]
+
+        # 第一次识别
+        available_count = _get_available_count()
+        already_count = 0
+
+        while already_count <= available_count:
+            times = min(4, available_count - already_count)
+            if times <= 0:
+                logger.info("没体力咯,看看有没有糖吃")
+                task_detail = context.run_task("EatCandy")
+                # if task_detail:
+                #     for node in task_detail.nodes:
+                #         logger.info(f"节点 {node.name} 是否完成: {node.completed}")
+                # 吃糖后重新识别体力
+                available_count = _get_available_count()
+                if available_count - already_count <= 0:
+                    logger.info("吃糖后依然没有体力，流程结束")
+                    return CustomAction.RunResult(success=True)
+                continue
+
+            context.override_pipeline(
+                {
+                    "StartReplay": {"next": ["Replaying"]},
+                    "SetReplaysTimes": {
+                        "template": [
+                            f"Combat/SetReplaysTimesX{times}.png",
+                            f"Combat/SetReplaysTimesX{times}_selected.png",
+                        ]
+                    },
+                }
+            )
+            logger.info(
+                f"战斗开始：可刷次数 {available_count}, 复现次数 {times}, 已刷次数 {already_count}"
+            )
+            context.run_task("OpenReplaysTimes")
+            already_count += times
+            logger.info(
+                f"战斗结束：可刷次数 {available_count}, 复现次数 {times}, 已刷次数 {already_count}"
+            )
+
+        return CustomAction.RunResult(success=True)
