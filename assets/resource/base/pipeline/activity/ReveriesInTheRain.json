@@ -1,4 +1,14 @@
 {
+    "JudgeDepthsOfMythWeekly": {
+        "action": "Custom",
+        "custom_action": "JudgeDepthsOfMythWeekly",
+        "custom_action_param": {
+            "resource": "cn"
+        },
+        "next": [
+            "ReveriesInTheRain"
+        ]
+    },
     "ReveriesInTheRain": {
         "doc": "常驻活动：雨中悬想",
         "next": [

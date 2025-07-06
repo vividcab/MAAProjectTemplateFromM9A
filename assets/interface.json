@@ -146,7 +146,7 @@
             "name": "银行购物",
             "entry": "ModifyBankTaskList",
             "option": [
-                "单账号",
+                "单账号（银行）",
                 "柜台特奉",
                 "金兔子(低阶柜台)",
                 "紫地球仪(低阶柜台)",
@@ -173,7 +173,8 @@
         },
         {
             "name": "雨中悬想：迷思海",
-            "entry": "ReveriesInTheRain",
+            "entry": "JudgeDepthsOfMythWeekly",
+            "option": ["单账号（迷思海）"],
             "doc": "[size:15][color:tomato]本功能仅完成“寻思”每周扫荡[/color][/size]"
         },
         {
@@ -1056,7 +1057,7 @@
                 }
             ]
         },
-        "单账号": {
+        "单账号（银行）": {
             "cases": [
                 {
                     "name": "Yes",
@@ -1279,6 +1280,22 @@
                             "next": [
                                 "DevelopmentTank"
                             ]
+                        }
+                    }
+                }
+            ]
+        },
+        "单账号（迷思海）": {
+            "cases": [
+                {
+                    "name": "Yes",
+                    "pipeline_override": {}
+                },
+                {
+                    "name": "No",
+                    "pipeline_override": {
+                        "JudgeDepthsOfMythWeekly": {
+                            "action": "DoNothing"
                         }
                     }
                 }

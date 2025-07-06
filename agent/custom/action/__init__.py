@@ -5,6 +5,7 @@ from .combat import *
 from .lucidscape import *
 from .wilderness import *
 from .outside_deduction import *
+from .reveries_in_the_rain import *
 
 __all__ = [
     "Screenshot",
@@ -26,4 +27,5 @@ __all__ = [
     "SelectChapter",
     "SelectCombatStage",
     "TargetCount",
+    "JudgeDepthsOfMythWeekly",
 ]
