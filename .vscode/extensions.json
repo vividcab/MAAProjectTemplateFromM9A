@@ -2,7 +2,6 @@
     "recommendations": [
         "ms-python.black-formatter",
         "davidanson.vscode-markdownlint",
-        "nekosu.maa-support",
-        "nekosu.maa-node"
+        "nekosu.maa-support"
     ]
 }
