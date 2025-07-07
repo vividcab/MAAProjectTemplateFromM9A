@@ -80,7 +80,7 @@ For more documents, please visit the [MaaFramework](https://github.com/MaaXYZ/Ma
 ## Acknowledgements
 
 This project is strongly driven by **[MaaFramework](https://github.com/MaaXYZ/MaaFramework)**!
-The UI is strongly supported by [MFAAvalonia](https://github.com/SweetSmellFox/MFAAvalonia), ~~[MFW-PyQt6](https://github.com/overflow65537/MFW-PyQt6)~~, ~~[MFAWPF](https://github.com/SweetSmellFox/MFAWPF)~~!
+The UI is strongly supported by [MFAAvalonia](https://github.com/SweetSmellFox/MFAAvalonia), ~~[MFW-CFA](https://github.com/overflow65537/MFW-PyQt6)~~, ~~[MFAWPF](https://github.com/SweetSmellFox/MFAWPF)~~!
 
 Thanks to the following developers for their contributions to this project:
 
