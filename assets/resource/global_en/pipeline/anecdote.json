@@ -1,7 +1,13 @@
 {
     "JudgeDuringAnecdote": {
-        "custom_action_param": {
-            "resource": "en"
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "DuringAnecdote",
+                "custom_action_param": {
+                    "resource": "en"
+                }
+            }
         }
     }
 }
