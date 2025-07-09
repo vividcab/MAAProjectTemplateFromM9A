@@ -1,4 +1,4 @@
-# M9A
+# M9A 长期公告
 
 ![LOGO](https://mirrorchyan.com/api/misc/static/project/M9A.png)
 
