@@ -28,8 +28,7 @@ Check out the [GitHub Pull Request Guide for Beginners](https://maa.plus/docs/zh
 
     > ⚠
     >
-    > **Do not forget `--recursive`! Do not forget `--recursive`! Do not forget `--recursive`!**
-    >
+    > **Do not forget `--recursive`! Do not forget `--recursive`! Do not forget `--recursive`!**  
     > OCR failures are often caused by forgetting to include `--recursive`.
 
 4. Download the [Release Package](https://github.com/MaaXYZ/MaaFramework/releases) of MaaFramework and extract it into the `deps` folder.
@@ -43,8 +42,8 @@ Check out the [GitHub Pull Request Guide for Beginners](https://maa.plus/docs/zh
         | --- | --- |
         | [MaaDebugger](https://github.com/MaaXYZ/MaaDebugger) | Standalone debugging tool |
         | [Maa Pipeline Support](https://marketplace.visualstudio.com/items?itemName=nekosu.maa-support) | VSCode plugin for debugging, screenshots, ROI extraction, color picking, etc. |
-        | [ImageCropper](https://github.com/MaaXYZ/MaaFramework/tree/main/tools/ImageCropper) | Standalone tool for screenshots and ROI extraction |
-        | [MFA Tools(Not recommended)](https://github.com/SweetSmellFox/MFATools) | Standalone tool for screenshots, ROI extraction, and color picking |
+        | [MFA Tools(Windows Only)](https://github.com/SweetSmellFox/MFATools) | Standalone tool for screenshots, ROI extraction, and color picking |
+        | [ImageCropper(Not recommended)](https://github.com/MaaXYZ/MaaFramework/tree/main/tools/ImageCropper) | Standalone tool for screenshots and ROI extraction |
 
 6. Local installation
 
@@ -139,6 +138,10 @@ Currently enabled formatting tools:
 ### Automatically Format Code Using Pre-commit Hooks
 
 <a id="pre-commit-hooks"></a>
+
+> [!NOTE]
+>
+> In actual collaboration, when developing in vscode, after installing the recommended plugin, automatic formatting can basically be completed, so this part can be skipped.
 
 1. Ensure that Python and Node environments are installed on your computer.
 
