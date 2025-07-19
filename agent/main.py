@@ -227,6 +227,9 @@ def check_and_install_dependencies():
         logger.info(f"在虚拟环境 ({VENV_DIR}) 中运行: {_is_running_in_our_venv()}")
 
     current_version = read_interface_version()
+    if current_version == "DEBUG":
+        logger.info("当前处于开发模式，跳过版本检查")
+        return
     last_version = pip_config.get("last_version", "unknown")
 
     logger.info(f"启用 pip 安装依赖: {enable_pip_install}")
@@ -256,7 +259,7 @@ def read_interface_version(interface_file_name="./interface.json") -> str:
         target_path = interface_path
     elif assets_interface_path.exists():
         logger.info("当前处于开发模式")
-        return "unknown"
+        return "DEBUG"
 
     if target_path is None:
         logger.warning("未找到interface.json")
