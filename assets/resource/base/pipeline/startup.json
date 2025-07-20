@@ -23,7 +23,8 @@
             "Downloading",
             "BackButton",
             "HomeButton",
-            "Start1999"
+            "Start1999",
+            "ClickHomeCount"
         ]
     },
     "ReturnMain": {
