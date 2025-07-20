@@ -101,7 +101,7 @@ class MultiRecognition(CustomRecognition):
             # ROI计算
             final_roi = self._process_return_value(return_value, node_results)
             if final_roi:
-                logger.info(f"MultiRecognition识别成功，返回ROI: {final_roi}")
+                logger.debug(f"MultiRecognition识别成功，返回ROI: {final_roi}")
                 return CustomRecognition.AnalyzeResult(
                     box=final_roi, detail="MultiRecognition"
                 )
@@ -416,11 +416,11 @@ class MultiRecognition(CustomRecognition):
         执行具体的ROI函数
         """
         try:
-            args = [arg.strip() for arg in func_args.split(",")]
+            args = self._parse_function_args(func_args)
 
             if func_name == "UNION":
                 if len(args) != 2:
-                    logger.error(f"UNION函数需要2个参数，得到{len(args)}个")
+                    logger.error(f"UNION函数需要2个参数，得到{len(args)}个: {args}")
                     return None
                 roi1 = self._parse_roi_arg(args[0])
                 roi2 = self._parse_roi_arg(args[1])
@@ -429,7 +429,9 @@ class MultiRecognition(CustomRecognition):
 
             elif func_name == "INTERSECTION":
                 if len(args) != 2:
-                    logger.error(f"INTERSECTION函数需要2个参数，得到{len(args)}个")
+                    logger.error(
+                        f"INTERSECTION函数需要2个参数，得到{len(args)}个: {args}"
+                    )
                     return None
                 roi1 = self._parse_roi_arg(args[0])
                 roi2 = self._parse_roi_arg(args[1])
@@ -438,7 +440,7 @@ class MultiRecognition(CustomRecognition):
 
             elif func_name == "OFFSET":
                 if len(args) != 5:
-                    logger.error(f"OFFSET函数需要5个参数，得到{len(args)}个")
+                    logger.error(f"OFFSET函数需要5个参数，得到{len(args)}个: {args}")
                     return None
                 roi = self._parse_roi_arg(args[0])
                 if roi:
@@ -468,6 +470,34 @@ class MultiRecognition(CustomRecognition):
         except Exception as e:
             logger.error(f"解析ROI参数失败: {arg}, 错误: {e}")
             return None
+
+    def _parse_function_args(self, args_str: str) -> List[str]:
+        """
+        智能解析函数参数，正确处理包含方括号的ROI参数
+        """
+        args = []
+        current_arg = ""
+        bracket_count = 0
+
+        for char in args_str:
+            if char == "[":
+                bracket_count += 1
+                current_arg += char
+            elif char == "]":
+                bracket_count -= 1
+                current_arg += char
+            elif char == "," and bracket_count == 0:
+                # 只有在方括号外的逗号才作为参数分隔符
+                args.append(current_arg.strip())
+                current_arg = ""
+            else:
+                current_arg += char
+
+        # 添加最后一个参数
+        if current_arg:
+            args.append(current_arg.strip())
+
+        return args
 
     def _calculate_union(self, roi1: List[int], roi2: List[int]) -> List[int]:
         """
