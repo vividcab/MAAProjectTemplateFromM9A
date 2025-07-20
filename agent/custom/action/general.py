@@ -29,7 +29,7 @@ class Screenshot(CustomAction):
     ) -> CustomAction.RunResult:
 
         # image array(BGR)
-        screen_array = context.tasker.controller.post_screencap().wait().get()
+        screen_array = context.tasker.controller.cached_image
 
         # Check resolution aspect ratio
         height, width = screen_array.shape[:2]
