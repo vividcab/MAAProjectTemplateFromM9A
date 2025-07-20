@@ -29,7 +29,7 @@
     "files.associations": {
         "**/assets/**/*.json": "jsonc"
     },
-    "[json]": {
+    "[json][jsonc]": {
         "editor.formatOnSave": true,
         "editor.insertSpaces": true,
         "editor.tabSize": 4,
