@@ -19,6 +19,8 @@
             "Reward",
             "SignInReward",
             "CloseRewardPage",
+            "Confirm",
+            "VictoryReturn",
             "Download",
             "Downloading",
             "BackButton",
@@ -52,6 +54,9 @@
             "SignInReward",
             "Reward",
             "CloseRewardPage",
+            "StartGame",
+            "Confirm",
+            "VictoryReturn",
             "ClickBlank",
             "ClickHomeCount"
         ]
@@ -517,7 +522,8 @@
         },
         "action": {
             "type": "Click"
-        }
+        },
+        "post_delay": 3000
     },
     "BirthdayReward": {
         "recognition": {
@@ -535,7 +541,8 @@
         },
         "action": {
             "type": "Click"
-        }
+        },
+        "post_delay": 3000
     },
     "CloseRewardPage": {
         "doc": "关闭签到奖励页面",
@@ -658,6 +665,47 @@
                     580,
                     226,
                     121
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        }
+    },
+    "Confirm": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "确认",
+                    "确定"
+                ],
+                "roi": [
+                    775,
+                    405,
+                    63,
+                    33
+                ],
+                "only_rec": true
+            }
+        },
+        "action": {
+            "type": "Click"
+        }
+    },
+    "VictoryReturn": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    678,
+                    10,
+                    473,
+                    240
+                ],
+                "expected": [
+                    "战斗",
+                    "胜利"
                 ]
             }
         },
