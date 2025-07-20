@@ -17,6 +17,7 @@
             "AccumulatedSignIn",
             "BirthdayReward",
             "Reward",
+            "SignInReward",
             "Item-140001Reward",
             "CloseRewardPage",
             "Download",
@@ -52,7 +53,9 @@
                 "package": "com.shenlan.m.reverse1999/com.ssgame.mobile.gamesdk.frame.AppStartUpActivity"
             }
         },
-        "next": ["DisableStart1999"]
+        "next": [
+            "DisableStart1999"
+        ]
     },
     "DisableStart1999": {
         "action": {
@@ -586,5 +589,58 @@
             "CloseRewardPage",
             "HomeFlag"
         ]
+    },
+    "SignInReward": {
+        "recognition": {
+            "type": "Custom",
+            "param": {
+                "custom_recognition": "MultiRecognition",
+                "custom_recognition_param": {
+                    "nodes": [
+                        "SignInReward_template",
+                        "SignInReward_color"
+                    ],
+                    "return": "INTERSECTION(OFFSET($0,20,0,0,0),$1)"
+                }
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 3000
+    },
+    "SignInReward_template": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": "StartUp/SignInReward.png",
+                "roi": [
+                    115,
+                    562,
+                    1048,
+                    155
+                ],
+                "threshold": 0.9
+            }
+        }
+    },
+    "SignInReward_color": {
+        "recognition": {
+            "type": "ColorMatch",
+            "param": {
+                "upper": [
+                    255,
+                    117,
+                    36
+                ],
+                "lower": [
+                    218,
+                    67,
+                    0
+                ],
+                "roi": "SignInReward_template",
+                "count": 300
+            }
+        }
     }
 }
