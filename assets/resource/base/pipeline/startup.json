@@ -18,7 +18,6 @@
             "BirthdayReward",
             "Reward",
             "SignInReward",
-            "Item-140001Reward",
             "CloseRewardPage",
             "Download",
             "Downloading",
@@ -49,6 +48,7 @@
             "CloseAnnouncement",
             "AccumulatedSignIn",
             "BirthdayReward",
+            "SignInReward",
             "Reward",
             "CloseRewardPage",
             "ClickBlank",
@@ -230,7 +230,6 @@
             "AccumulatedSignIn",
             "BirthdayReward",
             "Reward",
-            "Item-140001Reward",
             "CloseAnnouncement",
             "CloseRewardPage",
             "BackButton"
@@ -285,7 +284,6 @@
             "ObtainedAwards",
             "AccumulatedSignIn",
             "BirthdayReward",
-            "Item-140001Reward",
             "Reward",
             "CloseRewardPage",
             "CloseAnnouncement",
@@ -538,67 +536,8 @@
             "type": "Click"
         }
     },
-    "Item-140001Reward": {
-        "doc": "独一律奖励",
-        "recognition": {
-            "type": "TemplateMatch",
-            "param": {
-                "roi": [
-                    126,
-                    415,
-                    1024,
-                    204
-                ],
-                "template": "StartUp/Item-140001Reward.png"
-            }
-        },
-        "action": {
-            "type": "Click",
-            "param": {
-                "target_offset": [
-                    0,
-                    -108,
-                    0,
-                    0
-                ]
-            }
-        },
-        "next": [
-            "NoItem-140001Reward",
-            "Item-140001Reward",
-            "CloseRewardPage"
-        ],
-        "interrupt": [
-            "ObtainedAwards"
-        ]
-    },
-    "NoItem-140001Reward": {
-        "recognition": {
-            "type": "OCR",
-            "param": {
-                "roi": [
-                    1020,
-                    41,
-                    260,
-                    236
-                ],
-                "expected": [
-                    "未达到",
-                    "领取",
-                    "条件"
-                ]
-            }
-        },
-        "post_wait_freezes": 300,
-        "next": [
-            "CloseRewardPage"
-        ],
-        "interrupt": [
-            "ObtainedAwards"
-        ]
-    },
     "CloseRewardPage": {
-        "doc": "关闭独一律签到页面",
+        "doc": "关闭签到奖励页面",
         "recognition": {
             "type": "TemplateMatch",
             "param": {
@@ -627,6 +566,7 @@
         ]
     },
     "SignInReward": {
+        // 领取签到奖励
         "recognition": {
             "type": "Custom",
             "param": {
@@ -634,9 +574,14 @@
                 "custom_recognition_param": {
                     "nodes": [
                         "SignInReward_template",
-                        "SignInReward_color"
+                        "SignInReward_color",
+                        "SignInReward_color1"
                     ],
-                    "return": "INTERSECTION(OFFSET($0,20,0,0,0),$1)"
+                    "logic": {
+                        "type": "CUSTOM",
+                        "expression": "$0 AND ($1 OR $2)"
+                    },
+                    "return": "INTERSECTION(OFFSET($0,20,0,0,0),UNION($1,$2))"
                 }
             }
         },
@@ -661,6 +606,7 @@
         }
     },
     "SignInReward_color": {
+        // 偏橙的颜色（独一律签到）
         "recognition": {
             "type": "ColorMatch",
             "param": {
@@ -672,6 +618,26 @@
                 "lower": [
                     218,
                     67,
+                    0
+                ],
+                "roi": "SignInReward_template",
+                "count": 300
+            }
+        }
+    },
+    "SignInReward_color1": {
+        // 偏黄的颜色
+        "recognition": {
+            "type": "ColorMatch",
+            "param": {
+                "upper": [
+                    255,
+                    186,
+                    47
+                ],
+                "lower": [
+                    218,
+                    136,
                     0
                 ],
                 "roi": "SignInReward_template",
