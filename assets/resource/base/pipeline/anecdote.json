@@ -1,4 +1,10 @@
 {
+    "Anecdote": {
+        "doc": "轶事通用任务",
+        "next": [
+            "JudgeDuringAnecdote"
+        ]
+    },
     "JudgeDuringAnecdote": {
         "action": {
             "type": "Custom",
@@ -9,12 +15,6 @@
                 }
             }
         },
-        "next": [
-            "Anecdote"
-        ]
-    },
-    "Anecdote": {
-        "doc": "轶事通用任务,使用需在interface.json中修改EnterTheActivityMain的template",
         "next": [
             "ActivityMainFlag",
             "ActivityMainAnecdoteFlag",

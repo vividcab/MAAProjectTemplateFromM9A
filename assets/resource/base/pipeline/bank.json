@@ -1,4 +1,9 @@
 {
+    "Bank": {
+        "next": [
+            "ModifyBankTaskList"
+        ]
+    },
     "ModifyBankTaskList": {
         "action": {
             "type": "Custom",

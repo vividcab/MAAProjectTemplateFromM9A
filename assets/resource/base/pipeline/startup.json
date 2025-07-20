@@ -29,6 +29,15 @@
     },
     "ReturnMain": {
         "doc": "返回主界面（专供任务开始前使用）",
+        "recognition": {
+            "type": "Custom",
+            "param": {
+                "custom_recognition": "Count",
+                "custom_recognition_param": {
+                    "target": 2
+                }
+            }
+        },
         "next": [
             "HomeFlagCloseReturnMain"
         ],
@@ -43,7 +52,7 @@
             "Reward",
             "CloseRewardPage",
             "ClickBlank",
-            "Stop"
+            "ClickHomeCount"
         ]
     },
     "Start1999": {
@@ -428,6 +437,33 @@
                     0,
                     -30,
                     0
+                ]
+            }
+        }
+    },
+    "ClickHomeCount": {
+        "recognition": {
+            "type": "Custom",
+            "param": {
+                "custom_recognition": "Count",
+                "custom_recognition_param": {
+                    "target": 20
+                }
+            }
+        },
+        "next": [
+            "ClickHome"
+        ]
+    },
+    "ClickHome": {
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    576,
+                    298,
+                    68,
+                    64
                 ]
             }
         }

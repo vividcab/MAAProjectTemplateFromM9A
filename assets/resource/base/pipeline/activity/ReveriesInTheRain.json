@@ -1,4 +1,10 @@
 {
+    "ReveriesInTheRain": {
+        "doc": "常驻活动：雨中悬想",
+        "next": [
+            "JudgeDepthsOfMythWeekly"
+        ]
+    },
     "JudgeDepthsOfMythWeekly": {
         "action": {
             "type": "Custom",
@@ -9,12 +15,6 @@
                 }
             }
         },
-        "next": [
-            "ReveriesInTheRain"
-        ]
-    },
-    "ReveriesInTheRain": {
-        "doc": "常驻活动：雨中悬想",
         "next": [
             "ReveriesInTheRainMainFlag"
         ],

@@ -1,4 +1,10 @@
 {
+    "CombatActivity": {
+        "doc": "活动战斗流程",
+        "next": [
+            "JudgeDuringAct"
+        ]
+    },
     "JudgeDuringAct": {
         "action": {
             "type": "Custom",

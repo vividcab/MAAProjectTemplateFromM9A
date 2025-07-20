@@ -113,7 +113,7 @@
         },
         {
             "name": "活动刷取",
-            "entry": "JudgeDuringAct",
+            "entry": "CombatActivity",
             "option": [
                 "复刻模式",
                 "活动难度",
@@ -144,7 +144,7 @@
         },
         {
             "name": "银行购物",
-            "entry": "ModifyBankTaskList",
+            "entry": "Bank",
             "option": [
                 "单账号（银行）",
                 "柜台特奉",
@@ -169,12 +169,14 @@
         },
         {
             "name": "当期轶事",
-            "entry": "JudgeDuringAnecdote"
+            "entry": "Anecdote"
         },
         {
             "name": "雨中悬想：迷思海",
-            "entry": "JudgeDepthsOfMythWeekly",
-            "option": ["单账号（迷思海）"],
+            "entry": "ReveriesInTheRain",
+            "option": [
+                "单账号（迷思海）"
+            ],
             "doc": "[size:15][color:tomato]本功能仅完成“寻思”每周扫荡[/color][/size]"
         },
         {
