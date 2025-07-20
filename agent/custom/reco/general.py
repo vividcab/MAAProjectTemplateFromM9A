@@ -315,9 +315,10 @@ class MultiRecognition(CustomRecognition):
                 if roi is not None:
                     roi_str = f"[{roi[0]},{roi[1]},{roi[2]},{roi[3]}]"
                     eval_expression = eval_expression.replace(key, roi_str)
+                    logger.debug(f"{key} ROI: {roi}")
                 else:
-                    logger.warning(f"节点 {key} 识别失败，无法获取ROI")
-                    return None
+                    eval_expression = eval_expression.replace(key, "[0,0,0,0]")
+                    logger.debug(f"{key} ROI: {roi}")
 
             logger.debug(f"ROI表达式转换: {expression} -> {eval_expression}")
 
@@ -364,10 +365,10 @@ class MultiRecognition(CustomRecognition):
                 if roi is not None:
                     roi_str = f"[{roi[0]},{roi[1]},{roi[2]},{roi[3]}]"
                     expression = expression.replace(f"{{{node_name}}}", roi_str)
-                    logger.debug(f"外部节点ROI {node_name}: {roi_str}")
+                    logger.debug(f"{node_name} ROI: {roi_str}")
                 else:
-                    logger.warning(f"外部节点 {node_name} 无有效ROI")
-                    return None
+                    expression = expression.replace(f"{{{node_name}}}", "[0,0,0,0]")
+                    logger.debug("{node_name} ROI: " + "[0,0,0,0]")
 
         return expression
 
