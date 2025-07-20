@@ -91,7 +91,7 @@
                 "template": "StartUp/BluePochLogo.png"
             }
         },
-        "post_wait_freezes": 300
+        "post_delay": 3000
     },
     "Disclaimer": {
         "recognition": {
@@ -106,7 +106,7 @@
                 "template": "StartUp/Disclaimer.png"
             }
         },
-        "post_wait_freezes": 1000
+        "post_delay": 3000
     },
     "GameLoading": {
         "recognition": {
@@ -121,7 +121,7 @@
                 "template": "StartUp/GameLoading.png"
             }
         },
-        "post_wait_freezes": 500
+        "post_delay": 3000
     },
     "GameLoading2": {
         "recognition": {
@@ -136,7 +136,7 @@
                 "template": "StartUp/GameLoading2.png"
             }
         },
-        "post_delay": 2000
+        "post_delay": 3000
     },
     "Downloading": {
         "recognition": {
@@ -544,9 +544,9 @@
             "param": {
                 "roi": [
                     1040,
-                    60,
+                    40,
                     239,
-                    146
+                    166
                 ],
                 "template": [
                     "StartUp/CloseRewardPage_2.2.png",
@@ -554,17 +554,14 @@
                     "StartUp/CloseItemDetail.png"
                 ],
                 "green_mask": true,
-                "threshold": 0.6
+                "threshold": 0.6,
+                "order_by": "Score"
             }
         },
         "action": {
             "type": "Click"
         },
-        "post_delay": 1000,
-        "next": [
-            "CloseRewardPage",
-            "HomeFlag"
-        ]
+        "post_delay": 3000
     },
     "SignInReward": {
         // 领取签到奖励
@@ -644,6 +641,28 @@
                 "roi": "SignInReward_template",
                 "count": 300
             }
+        }
+    },
+    "ClickTarot": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "点击",
+                    "揭开",
+                    "奥秘",
+                    "继续"
+                ],
+                "roi": [
+                    528,
+                    580,
+                    226,
+                    121
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
         }
     }
 }
