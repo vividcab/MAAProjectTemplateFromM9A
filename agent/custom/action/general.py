@@ -8,6 +8,7 @@ from maa.custom_action import CustomAction
 from maa.context import Context
 
 from utils import logger
+from custom.reco import Count
 
 
 @AgentServer.custom_action("Screenshot")
@@ -120,4 +121,31 @@ class NodeOverride(CustomAction):
         logger.debug(f"NodeOverride: {ppover}")
         context.override_pipeline(ppover)
 
+        return CustomAction.RunResult(success=True)
+
+
+@AgentServer.custom_action("ResetCount")
+class ResetCount(CustomAction):
+    """
+    重置计数器。
+
+    参数格式:
+    {
+        "node_name": String # 目标计数器节点名称，不存在时重置全部节点
+    }
+    """
+
+    def run(
+        self,
+        context: Context,
+        argv: CustomAction.RunArg,
+    ) -> CustomAction.RunResult:
+
+        param = json.loads(argv.custom_action_param)
+        if not param:
+            Count.reset_count()
+            return CustomAction.RunResult(success=True)
+
+        node_name = param.get("node_name", None)
+        Count.reset_count(node_name)
         return CustomAction.RunResult(success=True)

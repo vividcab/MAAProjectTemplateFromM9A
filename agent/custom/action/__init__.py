@@ -11,6 +11,7 @@ __all__ = [
     "Screenshot",
     "DisableNode",
     "NodeOverride",
+    "ResetCount",
     "DuringAct",
     "DuringAnecdote",
     "DuringRe_release",
