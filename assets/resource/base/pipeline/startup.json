@@ -61,6 +61,102 @@
             "ClickHomeCount"
         ]
     },
+    "StartGame": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    352,
+                    230,
+                    587,
+                    183
+                ],
+                "template": "StartUp/StartGame.png",
+                "green_mask": true
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "HomeFlag",
+            "StartGame"
+        ],
+        "interrupt": [
+            "HomeLoading_wait",
+            "ObtainedAwards",
+            "AccumulatedSignIn",
+            "BirthdayReward",
+            "Reward",
+            "SignInReward",
+            "ClickTarot",
+            "Confirm",
+            "CloseAnnouncement",
+            "CloseRewardPage",
+            "BackButton",
+            "ClickHomeCount"
+        ]
+    },
+    "HomeLoading": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    459,
+                    359,
+                    364,
+                    152
+                ],
+                "template": "StartUp/HomeLoading.png"
+            }
+        },
+        "post_wait_freezes": {
+            "time": 500,
+            "target": [
+                517,
+                271,
+                259,
+                140
+            ]
+        }
+    },
+    "HomeLoading_wait": {
+        "doc": "专供启动时使用，与原版分开以防止ReturnMain大面积报错",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    459,
+                    359,
+                    364,
+                    152
+                ],
+                "template": "StartUp/HomeLoading.png"
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "HomeFlag",
+            "HomeLoading_wait"
+        ],
+        "interrupt": [
+            "SkipButton",
+            "ObtainedAwards",
+            "AccumulatedSignIn",
+            "BirthdayReward",
+            "Reward",
+            "SignInReward",
+            "ClickTarot",
+            "Confirm",
+            "ClickBlank",
+            "CloseRewardPage",
+            "CloseAnnouncement",
+            "SkipOpeningAnimation",
+            "ClickHomeCount"
+        ]
+    },
     "Start1999": {
         "action": {
             "type": "StartApp",
@@ -208,93 +304,6 @@
         "action": {
             "type": "Click"
         }
-    },
-    "StartGame": {
-        "recognition": {
-            "type": "TemplateMatch",
-            "param": {
-                "roi": [
-                    352,
-                    230,
-                    587,
-                    183
-                ],
-                "template": "StartUp/StartGame.png",
-                "green_mask": true
-            }
-        },
-        "action": {
-            "type": "Click"
-        },
-        "next": [
-            "HomeFlag",
-            "StartGame"
-        ],
-        "interrupt": [
-            "HomeLoading_wait",
-            "ObtainedAwards",
-            "AccumulatedSignIn",
-            "BirthdayReward",
-            "Reward",
-            "CloseAnnouncement",
-            "CloseRewardPage",
-            "BackButton"
-        ]
-    },
-    "HomeLoading": {
-        "recognition": {
-            "type": "TemplateMatch",
-            "param": {
-                "roi": [
-                    459,
-                    359,
-                    364,
-                    152
-                ],
-                "template": "StartUp/HomeLoading.png"
-            }
-        },
-        "post_wait_freezes": {
-            "time": 500,
-            "target": [
-                517,
-                271,
-                259,
-                140
-            ]
-        }
-    },
-    "HomeLoading_wait": {
-        "doc": "专供启动时使用，与原版分开以防止ReturnMain大面积报错",
-        "recognition": {
-            "type": "TemplateMatch",
-            "param": {
-                "roi": [
-                    459,
-                    359,
-                    364,
-                    152
-                ],
-                "template": "StartUp/HomeLoading.png"
-            }
-        },
-        "action": {
-            "type": "Click"
-        },
-        "next": [
-            "HomeFlag",
-            "HomeLoading_wait"
-        ],
-        "interrupt": [
-            "SkipButton",
-            "ObtainedAwards",
-            "AccumulatedSignIn",
-            "BirthdayReward",
-            "Reward",
-            "CloseRewardPage",
-            "CloseAnnouncement",
-            "SkipOpeningAnimation"
-        ]
     },
     "SkipButton": {
         "recognition": {
