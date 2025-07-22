@@ -66,7 +66,7 @@ class JudgeDepthsOfMythWeekly(CustomAction):
         is_current_week, _ = is_current_period(timestamp_ms, timezone)
 
         if is_current_week:
-            context.override_pipeline({"ReveriesInTheRain": {"enabled": False}})
+            context.override_next("JudgeDepthsOfMythWeekly", [])
             logger.info("本周已完成迷思海扫荡，跳过")
         else:
             # 更新时间戳为当前时间

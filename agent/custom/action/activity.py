@@ -110,7 +110,7 @@ class DuringAnecdote(CustomAction):
                 continue
             break
 
-        context.override_pipeline({"Anecdote": {"next": [], "interrupt": []}})
+        context.override_next("JudgeDuringAnecdote", [])
         logger.info("当前不在轶事开放时间，跳过当前任务")
 
         return CustomAction.RunResult(success=True)
