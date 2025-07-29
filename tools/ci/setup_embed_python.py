@@ -149,6 +149,15 @@ def main():
     python_executable_final_path = None
 
     if os_type == "Windows":
+        # 在Windows ARM64环境中，platform.machine()可能错误返回AMD64
+        # 我们需要检查处理器标识符来确定真实架构
+        processor_identifier = os.environ.get("PROCESSOR_IDENTIFIER", "")
+
+        # 检查是否为ARM64处理器
+        if "ARMv8" in processor_identifier or "ARM64" in processor_identifier:
+            print(f"检测到ARM64处理器: {processor_identifier}")
+            os_arch = "ARM64"
+
         # 映射platform.machine()到Python官网的命名
         arch_mapping = {
             "AMD64": "amd64",
@@ -161,6 +170,8 @@ def main():
         if win_arch_suffix not in ["amd64", "arm64"]:
             print(f"错误: 不支持的Windows架构: {os_arch} -> {win_arch_suffix}")
             return
+
+        print(f"使用Windows架构: {os_arch} -> {win_arch_suffix}")
 
         download_url = f"https://www.python.org/ftp/python/{PYTHON_VERSION_TARGET}/python-{PYTHON_VERSION_TARGET}-embed-{win_arch_suffix}.zip"
         zip_filename = f"python-{PYTHON_VERSION_TARGET}-embed-{win_arch_suffix}.zip"
