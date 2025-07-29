@@ -69,11 +69,15 @@ jobs:
 
   windows:
     needs: meta
-    runs-on: windows-latest
     strategy:
       matrix:
-        arch: [x86_64]
+        include:
+          - arch: x86_64
+            runner: windows-latest
+          - arch: aarch64
+            runner: windows-11-arm
       fail-fast: false
+    runs-on: ${{ matrix.runner }}
 
     steps:
       - uses: actions/checkout@v4
@@ -95,7 +99,7 @@ jobs:
         uses: robinraju/release-downloader@v1
         with:
           repository: SweetSmellFox/MFAAvalonia
-          fileName: "MFAAvalonia-*-win-x64*"
+          fileName: "MFAAvalonia-*-win-${{ matrix.arch == 'x86_64' && 'x64' || 'arm64' }}*"
           latest: true
           out-file-path: "MFA"
           extract: true
@@ -189,11 +193,15 @@ jobs:
 
   macos:
     needs: meta
-    runs-on: macos-latest
     strategy:
       matrix:
-        arch: [aarch64, x86_64]
+        include:
+          - arch: x86_64
+            runner: macos-13  # Intel-based macOS runner
+          - arch: aarch64
+            runner: macos-latest  # Apple Silicon macOS runner
       fail-fast: false
+    runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v4
         with:
