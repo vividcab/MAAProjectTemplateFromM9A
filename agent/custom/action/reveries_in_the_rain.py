@@ -57,7 +57,7 @@ class JudgeDepthsOfMythWeekly(CustomAction):
         if "DepthsOfMyth" not in data:
             data["DepthsOfMyth"] = int(time.time() * 1000)
             with open(file_path, "w", encoding="utf-8") as file:
-                json.dump(data, f, indent=4)
+                json.dump(data, file, indent=4)
             logger.info("无时间记录，跳过时间检查")
 
             return CustomAction.RunResult(success=True)
