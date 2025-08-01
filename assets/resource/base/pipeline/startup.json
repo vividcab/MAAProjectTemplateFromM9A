@@ -94,6 +94,8 @@
             "CloseAnnouncement",
             "CloseRewardPage",
             "BackButton",
+            "HomeButton",
+            "SkipButton",
             "ClickHomeCount"
         ]
     },
@@ -143,6 +145,8 @@
         ],
         "interrupt": [
             "SkipButton",
+            "BackButton",
+            "HomeButton",
             "ObtainedAwards",
             "AccumulatedSignIn",
             "BirthdayReward",
@@ -330,10 +334,25 @@
         }
     },
     "SkipOpeningAnimation": {
+        "recognition": {
+            "type": "Custom",
+            "param": {
+                "custom_recognition": "Count",
+                "custom_recognition_param": {
+                    "target": 15
+                }
+            }
+        },
         "action": {
             "type": "Click",
             "param": {
-                "target": "HomeLoading_wait"
+                "target": "HomeLoading_wait",
+                "target_offset": [
+                    110,
+                    0,
+                    -110,
+                    0
+                ]
             }
         }
     },
@@ -464,11 +483,6 @@
                 }
             }
         },
-        "next": [
-            "ClickHome"
-        ]
-    },
-    "ClickHome": {
         "action": {
             "type": "Click",
             "param": {
