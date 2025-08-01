@@ -12,13 +12,12 @@
             "Disclaimer",
             "HomeLoading",
             "GameLoading",
-            "CloseAnnouncement",
             "ObtainedAwards",
             "AccumulatedSignIn",
             "BirthdayReward",
             "Reward",
             "SignInReward",
-            "CloseRewardPage",
+            "ClosePage",
             "Confirm",
             "VictoryReturn",
             "Download",
@@ -48,12 +47,11 @@
             "BackButton",
             "HomeLoading",
             "ObtainedAwards",
-            "CloseAnnouncement",
             "AccumulatedSignIn",
             "BirthdayReward",
             "SignInReward",
             "Reward",
-            "CloseRewardPage",
+            "ClosePage",
             "StartGame",
             "Confirm",
             "VictoryReturn",
@@ -91,8 +89,7 @@
             "SignInReward",
             "ClickTarot",
             "Confirm",
-            "CloseAnnouncement",
-            "CloseRewardPage",
+            "ClosePage",
             "BackButton",
             "HomeButton",
             "SkipButton",
@@ -155,8 +152,7 @@
             "ClickTarot",
             "Confirm",
             "ClickBlank",
-            "CloseRewardPage",
-            "CloseAnnouncement",
+            "ClosePage",
             "SkipOpeningAnimation",
             "ClickHomeCount"
         ]
@@ -283,25 +279,6 @@
                 "expected": [
                     "下载",
                     "重试"
-                ]
-            }
-        },
-        "action": {
-            "type": "Click"
-        }
-    },
-    "CloseAnnouncement": {
-        "recognition": {
-            "type": "TemplateMatch",
-            "param": {
-                "roi": [
-                    1105,
-                    40,
-                    143,
-                    140
-                ],
-                "template": [
-                    "StartUp/CloseAnnouncement.png"
                 ]
             }
         },
@@ -567,8 +544,8 @@
         },
         "post_delay": 3000
     },
-    "CloseRewardPage": {
-        "doc": "关闭签到奖励页面",
+    "ClosePage": {
+        // 用于关闭各种页面，如签到、公告、物品详情页
         "recognition": {
             "type": "TemplateMatch",
             "param": {
