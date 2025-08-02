@@ -452,7 +452,6 @@ tools/ImageCropper/**/*.png
 .nicegui/storage-general.json
 
 # M9A
-config/maa_option.json
-assets/config/maa_pi_config.json
-/python
-config/pip_config.json
+python/
+.venv/
+config/
