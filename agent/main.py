@@ -28,6 +28,8 @@ from utils import logger
 VENV_NAME = ".venv"  # 虚拟环境目录的名称
 VENV_DIR = Path(project_root_dir) / VENV_NAME
 
+### 虚拟环境相关 ###
+
 
 def _is_running_in_our_venv():
     """检查脚本是否在此脚本管理的特定venv中运行。"""
@@ -103,6 +105,32 @@ def ensure_venv_and_relaunch_if_needed():
         sys.exit(1)
 
 
+### 配置相关 ###
+
+
+def read_interface_version(interface_file_name="./interface.json") -> str:
+    interface_path = Path(project_root_dir) / interface_file_name
+    assets_interface_path = Path(project_root_dir) / "assets" / interface_file_name
+
+    target_path = None
+    if interface_path.exists():
+        target_path = interface_path
+    elif assets_interface_path.exists():
+        return "DEBUG"
+
+    if target_path is None:
+        logger.warning("未找到interface.json")
+        return "unknown"
+
+    try:
+        with open(target_path, "r", encoding="utf-8") as f:
+            interface_data = json.load(f)
+            return interface_data.get("version", "unknown")
+    except Exception:
+        logger.exception(f"读取interface.json版本失败，文件路径：{target_path}")
+        return "unknown"
+
+
 def read_pip_config() -> dict:
     config_dir = Path("./config")
     config_dir.mkdir(exist_ok=True)
@@ -127,6 +155,24 @@ def read_pip_config() -> dict:
     except Exception:
         logger.exception("读取pip配置失败，使用默认配置")
         return default_config
+
+
+def update_pip_config_last_version(version: str) -> bool:
+    config_path = Path(project_root_dir) / "config" / "pip_config.json"
+    try:
+        config = read_pip_config()
+        config["last_version"] = version
+
+        config_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(config_path, "w", encoding="utf-8") as f:
+            json.dump(config, f, indent=4)
+        return True
+    except Exception:
+        logger.exception("更新pip配置失败")
+        return False
+
+
+### 依赖安装相关 ###
 
 
 def get_available_mirror(pip_config: dict) -> str:
@@ -256,42 +302,7 @@ def check_and_install_dependencies():
             logger.info("跳过依赖安装")
 
 
-def read_interface_version(interface_file_name="./interface.json") -> str:
-    interface_path = Path(project_root_dir) / interface_file_name
-    assets_interface_path = Path(project_root_dir) / "assets" / interface_file_name
-
-    target_path = None
-    if interface_path.exists():
-        target_path = interface_path
-    elif assets_interface_path.exists():
-        return "DEBUG"
-
-    if target_path is None:
-        logger.warning("未找到interface.json")
-        return "unknown"
-
-    try:
-        with open(target_path, "r", encoding="utf-8") as f:
-            interface_data = json.load(f)
-            return interface_data.get("version", "unknown")
-    except Exception:
-        logger.exception(f"读取interface.json版本失败，文件路径：{target_path}")
-        return "unknown"
-
-
-def update_pip_config_last_version(version: str) -> bool:
-    config_path = Path(project_root_dir) / "config" / "pip_config.json"
-    try:
-        config = read_pip_config()
-        config["last_version"] = version
-
-        config_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(config_path, "w", encoding="utf-8") as f:
-            json.dump(config, f, indent=4)
-        return True
-    except Exception:
-        logger.exception("更新pip配置失败")
-        return False
+### 核心业务 ###
 
 
 def agent():
@@ -340,6 +351,9 @@ def agent():
     except Exception as e:
         logger.exception("agent运行过程中发生异常")
         raise
+
+
+### 程序入口 ###
 
 
 def main():
