@@ -4,7 +4,13 @@ import sys
 try:
     from loguru import logger as _logger
 
-    def setup_logger(log_dir="debug/custom"):
+    def setup_logger(log_dir="debug/custom", console_level="INFO"):
+        """设置 loguru logger
+        
+        Args:
+            log_dir: 日志文件目录
+            console_level: 控制台输出等级 (DEBUG, INFO, WARNING, ERROR)
+        """
         os.makedirs(log_dir, exist_ok=True)
         _logger.remove()
 
@@ -12,7 +18,7 @@ try:
             sys.stderr,
             format="[<level>{level}</level>] <level>{message}</level>",
             colorize=True,
-            level="INFO",
+            level=console_level,
         )
         _logger.add(
             f"{log_dir}/{{time:YYYY-MM-DD}}.log",
@@ -25,6 +31,11 @@ try:
             enqueue=True,
         )
         return _logger
+
+    def change_console_level(level="DEBUG"):
+        """动态修改控制台日志等级"""
+        setup_logger(console_level=level)
+        _logger.info(f"控制台日志等级已更改为: {level}")
 
     logger = setup_logger()
 except ImportError:

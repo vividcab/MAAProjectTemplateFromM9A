@@ -305,7 +305,7 @@ def check_and_install_dependencies():
 ### 核心业务 ###
 
 
-def agent():
+def agent(is_dev_mode=False):
     try:
         # 清理模块缓存
         utils_modules = [
@@ -324,6 +324,12 @@ def agent():
         for attr_name in dir(utils):
             if not attr_name.startswith("_"):
                 globals()[attr_name] = getattr(utils, attr_name)
+
+        if is_dev_mode:
+            from utils.logger import change_console_level
+
+            change_console_level("DEBUG")
+            logger.info("开发模式：日志等级已设置为DEBUG")
 
         from maa.agent.agent_server import AgentServer
         from maa.toolkit import Toolkit
@@ -370,7 +376,7 @@ def main():
         os.chdir(Path("./assets"))
         logger.info(f"set cwd: {os.getcwd()}")
 
-    agent()
+    agent(is_dev_mode=is_dev_mode)
 
 
 if __name__ == "__main__":
