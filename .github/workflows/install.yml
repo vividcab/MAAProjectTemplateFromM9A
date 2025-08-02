@@ -118,7 +118,7 @@ jobs:
       - name: Install
         shell: bash
         run: |
-          ./install/python/python.exe ./tools/install.py ${{ needs.meta.outputs.tag }}
+          ./install/python/python.exe ./tools/ci/install.py ${{ needs.meta.outputs.tag }}
           if [ -d "MFA" ]; then
             echo "Copying MFA files to install directory..."
             mkdir -p install
@@ -177,7 +177,7 @@ jobs:
         run: |
           PYTHON_EXECUTABLE="python"
           echo "Using Python executable: $PYTHON_EXECUTABLE for Linux"
-          $PYTHON_EXECUTABLE ./tools/install.py ${{ needs.meta.outputs.tag }}
+          $PYTHON_EXECUTABLE ./tools/ci/install.py ${{ needs.meta.outputs.tag }}
           if [ -d "MFA" ]; then
             echo "Copying MFA files to install directory on Linux..."
             mkdir -p install
@@ -250,7 +250,7 @@ jobs:
         run: |
           PYTHON_EXECUTABLE="./install/python/bin/python3"
           echo "Using Python executable: $PYTHON_EXECUTABLE for macOS"
-          $PYTHON_EXECUTABLE ./tools/install.py ${{ needs.meta.outputs.tag }}
+          $PYTHON_EXECUTABLE ./tools/ci/install.py ${{ needs.meta.outputs.tag }}
 
           if [ -d "MFA" ]; then
             echo "Copying MFA files to install directory on macOS..."
