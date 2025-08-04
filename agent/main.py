@@ -175,62 +175,6 @@ def update_pip_config_last_version(version: str) -> bool:
 ### 依赖安装相关 ###
 
 
-def get_available_mirror(pip_config: dict) -> str | None:
-    mirrors = [pip_config.get("mirror")] + pip_config.get("backup_mirrors", [])
-    python_exe_to_use = sys.executable
-
-    try:
-        subprocess.run(
-            [
-                python_exe_to_use,
-                "-m",
-                "pip",
-                "-V",
-            ],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            check=True,  # 对非零退出码抛出CalledProcessError
-        )
-    except subprocess.CalledProcessError as e:
-        logger.warning(f"获取pip版本失败: {e.stderr.strip()}")
-        logger.warning("请尝试重新创建虚拟环境！")
-        return None
-    except Exception as e:
-        logger.warning("未知错误！")
-        logger.exception(f"获取pip版本时发生异常: {e}")
-        return None
-
-    for mirror in filter(None, mirrors):  # 过滤掉None或空字符串
-        try:
-            logger.info(f"尝试连接镜像源: {mirror}")
-            subprocess.run(
-                [
-                    python_exe_to_use,
-                    "-m",
-                    "pip",
-                    "list",
-                    "--local",
-                    "--format=json",
-                    "-i",
-                    mirror,
-                ],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                timeout=10,  # 检查超时时间
-                check=True,  # 对非零退出码抛出CalledProcessError
-            )
-            logger.info("当前镜像源可用")
-            return mirror
-        except subprocess.TimeoutExpired:
-            logger.warning("当前镜像源连接超时")
-        except subprocess.CalledProcessError as e:
-            logger.warning(f"镜像源返回错误 (代码: {e.returncode})")
-        except Exception as e:
-            logger.warning(f"检查镜像源时发生未知错误: {e}")
-    logger.error("所有镜像源均不可用")
-    return None
-
-
 def _run_pip_command(cmd_args: list, operation_name: str) -> bool:
     try:
         process = subprocess.Popen(
@@ -256,6 +200,12 @@ def _run_pip_command(cmd_args: list, operation_name: str) -> bool:
                 logger.error(f"{operation_name} 标准输出:\n{stdout.strip()}")
             if stderr and stderr.strip():
                 logger.error(f"{operation_name} 标准错误:\n{stderr.strip()}")
+
+            # 检查是否403错误
+            if stderr and ("403" in stderr or "Forbidden" in stderr):
+                logger.warning("检测到403错误，当前镜像源可能对某些包有访问限制")
+                return False
+
             return False
     except Exception as e:
         logger.exception(f"{operation_name} 时发生未知异常: {e}")
@@ -268,24 +218,52 @@ def install_requirements(req_file="requirements.txt", pip_config=None) -> bool:
         logger.error(f"{req_file} 文件不存在于 {req_path.resolve()}")
         return False
 
-    mirror = get_available_mirror(pip_config)
-    if not mirror:
-        logger.error("没有可用的镜像源，安装依赖失败")
-        return False
+    primary_mirror = pip_config.get("mirror", "")
+    backup_mirrors = pip_config.get("backup_mirrors", [])
 
-    cmd = [
-        sys.executable,
-        "-m",
-        "pip",
-        "install",
-        "-U",
-        "-r",
-        str(req_path),
-        "--no-warn-script-location",
-        "-i",
-        mirror,
-    ]
-    return _run_pip_command(cmd, f"从 {req_path.name} 安装依赖")
+    if primary_mirror:
+        # 构建命令，添加所有备用源作为extra-index-url
+        cmd = [
+            sys.executable,
+            "-m",
+            "pip",
+            "install",
+            "-U",
+            "-r",
+            str(req_path),
+            "--no-warn-script-location",
+            "-i",
+            primary_mirror,
+        ]
+
+        # 添加所有备用源作为extra-index-url
+        for backup_mirror in backup_mirrors:
+            if backup_mirror:  # 确保不是None或空字符串
+                cmd.extend(["--extra-index-url", backup_mirror])
+
+        if _run_pip_command(cmd, f"从 {req_path.name} 安装依赖"):
+            return True
+        else:
+            logger.error("所有镜像源策略均失败")
+            return False
+    else:
+        # 如果没有配置主镜像源，使用pip的本地全局配置
+        cmd = [
+            sys.executable,
+            "-m",
+            "pip",
+            "install",
+            "-U",
+            "-r",
+            str(req_path),
+            "--no-warn-script-location",
+        ]
+
+        if _run_pip_command(cmd, f"从 {req_path.name} 安装依赖 (本地全局配置)"):
+            return True
+        else:
+            logger.error("使用pip本地全局配置安装也失败")
+            return False
 
 
 def check_and_install_dependencies():
