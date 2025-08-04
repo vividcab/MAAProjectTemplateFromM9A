@@ -33,18 +33,24 @@ VENV_DIR = Path(project_root_dir) / VENV_NAME
 
 def _is_running_in_our_venv():
     """检查脚本是否在此脚本管理的特定venv中运行。"""
-    # 检查sys.executable是否在虚拟环境目录中
-    venv_path = VENV_DIR.resolve()
     current_python = Path(sys.executable).resolve()
 
+    logger.debug(f"当前Python解释器: {current_python}")
+
     if sys.platform.startswith("win"):
-        # Windows: 检查是否在 .venv/Scripts/ 目录下
-        expected_scripts_dir = venv_path / "Scripts"
-        return current_python.parent == expected_scripts_dir
+        # Windows: 如果在虚拟环境中，Python应该在 Scripts 目录下
+        if current_python.parent.name == "Scripts":
+            return True
+        else:
+            logger.debug("当前不在目标虚拟环境中")
+            return False
     else:
-        # Linux/Unix: 检查是否在 .venv/bin/ 目录下
-        expected_bin_dir = venv_path / "bin"
-        return current_python.parent == expected_bin_dir
+        # Linux/Unix: 如果在虚拟环境中，Python应该在 bin 目录下
+        if current_python.parent.name == "bin":
+            return True
+        else:
+            logger.debug("当前不在目标虚拟环境中")
+            return False
 
 
 def ensure_venv_and_relaunch_if_needed():
@@ -67,12 +73,12 @@ def ensure_venv_and_relaunch_if_needed():
                 check=True,
                 capture_output=True,
             )
-            logger.info(f"虚拟环境 {VENV_DIR} 创建成功。")
+            logger.info(f"创建成功")
         except subprocess.CalledProcessError as e:
             logger.error(
-                f"创建虚拟环境 '{VENV_DIR}' 失败: {e.stderr.decode(errors='ignore') if e.stderr else e.stdout.decode(errors='ignore')}"
+                f"创建失败: {e.stderr.decode(errors='ignore') if e.stderr else e.stdout.decode(errors='ignore')}"
             )
-            logger.error("无法在没有虚拟环境的情况下继续。正在退出。")
+            logger.error("正在退出")
             sys.exit(1)
         except FileNotFoundError:
             logger.error(
@@ -84,22 +90,66 @@ def ensure_venv_and_relaunch_if_needed():
     if sys.platform.startswith("win"):
         python_in_venv = VENV_DIR / "Scripts" / "python.exe"
     else:
-        python_in_venv = VENV_DIR / "bin" / "python3"
+        python3_path = VENV_DIR / "bin" / "python3"
+        python_path = VENV_DIR / "bin" / "python"
+        if python3_path.exists():
+            python_in_venv = python3_path
+        elif python_path.exists():
+            python_in_venv = python_path
+        else:
+            python_in_venv = python3_path  # 默认使用python3，让后续错误处理捕获
 
     if not python_in_venv.exists():
         logger.error(f"在虚拟环境 {python_in_venv} 中未找到Python解释器。")
         logger.error("虚拟环境创建可能失败或虚拟环境结构异常。")
         sys.exit(1)
 
-    logger.info(f"正在于虚拟环境重新启动")
+    logger.info(f"正在使用虚拟环境Python重新启动")
+
+    # 检测是否在VSCode终端中运行
+    is_vscode = os.environ.get("TERM_PROGRAM") == "vscode"
+
     try:
-        result = subprocess.run(
-            [str(python_in_venv)] + sys.argv,
-            cwd=os.getcwd(),
-            check=False,  # 不在非零退出码时抛出异常
-        )
-        # 退出时使用子进程的退出码
-        sys.exit(result.returncode)
+        cmd = [str(python_in_venv)] + sys.argv
+        logger.info(f"执行命令: {' '.join(cmd)}")
+
+        if is_vscode:
+            logger.info("检测到VSCode环境")
+            process = subprocess.Popen(
+                cmd,
+                cwd=os.getcwd(),
+                # 不使用PIPE，让输出直接显示在终端
+                stdout=None,  # 继承父进程的stdout
+                stderr=None,  # 继承父进程的stderr
+                stdin=None,  # 继承父进程的stdin
+                env=os.environ.copy(),  # 确保环境变量传递
+            )
+
+            logger.info(f"子进程启动，PID: {process.pid}")
+
+            # 等待子进程完成
+            try:
+                exit_code = process.wait()
+                logger.info(f"子进程完成，退出码: {exit_code}")
+                sys.exit(exit_code)
+            except KeyboardInterrupt:
+                logger.info("收到键盘中断信号，终止子进程")
+                process.terminate()
+                try:
+                    process.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    logger.warning("子进程未响应终止信号，强制杀死")
+                    process.kill()
+                sys.exit(130)
+        else:
+            result = subprocess.run(
+                cmd,
+                cwd=os.getcwd(),
+                check=False,  # 不在非零退出码时抛出异常
+            )
+            # 退出时使用子进程的退出码
+            sys.exit(result.returncode)
+
     except Exception as e:
         logger.exception(f"在虚拟环境中重新启动脚本失败: {e}")
         sys.exit(1)
