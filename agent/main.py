@@ -175,9 +175,30 @@ def update_pip_config_last_version(version: str) -> bool:
 ### 依赖安装相关 ###
 
 
-def get_available_mirror(pip_config: dict) -> str:
+def get_available_mirror(pip_config: dict) -> str | None:
     mirrors = [pip_config.get("mirror")] + pip_config.get("backup_mirrors", [])
     python_exe_to_use = sys.executable
+
+    try:
+        subprocess.run(
+            [
+                python_exe_to_use,
+                "-m",
+                "pip",
+                "-V",
+            ],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=True,  # 对非零退出码抛出CalledProcessError
+        )
+    except subprocess.CalledProcessError as e:
+        logger.warning(f"获取pip版本失败: {e.stderr.strip()}")
+        logger.warning("请尝试重新创建虚拟环境！")
+        return None
+    except Exception as e:
+        logger.warning("未知错误！")
+        logger.exception(f"获取pip版本时发生异常: {e}")
+        return None
 
     for mirror in filter(None, mirrors):  # 过滤掉None或空字符串
         try:
@@ -198,10 +219,10 @@ def get_available_mirror(pip_config: dict) -> str:
                 timeout=10,  # 检查超时时间
                 check=True,  # 对非零退出码抛出CalledProcessError
             )
-            logger.info(f"当前镜像源可用")
+            logger.info("当前镜像源可用")
             return mirror
         except subprocess.TimeoutExpired:
-            logger.warning(f"当前镜像源连接超时")
+            logger.warning("当前镜像源连接超时")
         except subprocess.CalledProcessError as e:
             logger.warning(f"镜像源返回错误 (代码: {e.returncode})")
         except Exception as e:
