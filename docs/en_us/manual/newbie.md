@@ -29,13 +29,14 @@
 
 | | Windows | macOS | Linux | Android |
 | :---: | :---: | :---: | :---: | :---: |
-| System Requirements | Windows 10 and above, x86_64 architecture | Self-test | Self-test | Not recommended |
+| System Requirements | Windows 10 and above | Self-test | Self-test | Not recommended |
 | Environment Setup Required | Yes | Yes | Yes | Yes |
 | Emulator Required | Yes | Yes | Emulator or containerized Android | No |
 | Usage | GUI or CLI | GUI or CLI | GUI or CLI | CLI |
 
 | | Notes |
 | --- | --- |
+| Windows Users | In most cases, please download the x86_64 architecture |
 | Mac Users | M9A supports both Apple Silicon and Intel chip Mac computers<br>But it's more recommended for Intel chip Mac computers to use Mac's built-in multi-system installation of Windows<br>And use Windows version M9A and emulator |
 | Android Users | M9A no longer provides Android version release packages<br>If you are very familiar with mobile phone operations and wish to use Android physical devices, please go to [Development Documentation](../develop/Notes-Before-Development.md) to install it yourself<br>You can refer to [Usage Method](https://github.com/MaaXYZ/MaaFramework/issues/475), and [MAA Documentation](https://maa.plus/docs/zh-cn/manual/device/android.html)<br>This method is complex and has certain risks, not recommended for beginner players |
 
