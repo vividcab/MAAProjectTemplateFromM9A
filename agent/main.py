@@ -282,6 +282,7 @@ def install_requirements(req_file="requirements.txt", pip_config=None) -> bool:
             "-r",
             str(req_path),
             "--no-warn-script-location",
+            "--break-system-packages",
             "-i",
             primary_mirror,
         ]
@@ -307,6 +308,7 @@ def install_requirements(req_file="requirements.txt", pip_config=None) -> bool:
             "-r",
             str(req_path),
             "--no-warn-script-location",
+            "--break-system-packages",
         ]
 
         if _run_pip_command(cmd, f"从 {req_path.name} 安装依赖 (本地全局配置)"):
