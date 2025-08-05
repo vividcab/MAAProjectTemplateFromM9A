@@ -106,49 +106,18 @@ def ensure_venv_and_relaunch_if_needed():
 
     logger.info(f"正在使用虚拟环境Python重新启动")
 
-    # 检测是否在VSCode终端中运行
-    is_vscode = os.environ.get("TERM_PROGRAM") == "vscode"
-
     try:
         cmd = [str(python_in_venv)] + sys.argv
         logger.info(f"执行命令: {' '.join(cmd)}")
 
-        if is_vscode:
-            logger.info("检测到VSCode环境")
-            process = subprocess.Popen(
-                cmd,
-                cwd=os.getcwd(),
-                # 不使用PIPE，让输出直接显示在终端
-                stdout=None,  # 继承父进程的stdout
-                stderr=None,  # 继承父进程的stderr
-                stdin=None,  # 继承父进程的stdin
-                env=os.environ.copy(),  # 确保环境变量传递
-            )
-
-            logger.info(f"子进程启动，PID: {process.pid}")
-
-            # 等待子进程完成
-            try:
-                exit_code = process.wait()
-                logger.info(f"子进程完成，退出码: {exit_code}")
-                sys.exit(exit_code)
-            except KeyboardInterrupt:
-                logger.info("收到键盘中断信号，终止子进程")
-                process.terminate()
-                try:
-                    process.wait(timeout=5)
-                except subprocess.TimeoutExpired:
-                    logger.warning("子进程未响应终止信号，强制杀死")
-                    process.kill()
-                sys.exit(130)
-        else:
-            result = subprocess.run(
-                cmd,
-                cwd=os.getcwd(),
-                check=False,  # 不在非零退出码时抛出异常
-            )
-            # 退出时使用子进程的退出码
-            sys.exit(result.returncode)
+        result = subprocess.run(
+            cmd,
+            cwd=os.getcwd(),
+            env=os.environ.copy(),
+            check=False,  # 不在非零退出码时抛出异常
+        )
+        # 退出时使用子进程的退出码
+        sys.exit(result.returncode)
 
     except Exception as e:
         logger.exception(f"在虚拟环境中重新启动脚本失败: {e}")
@@ -227,7 +196,7 @@ def update_pip_config_last_version(version: str) -> bool:
 
 def _run_pip_command(cmd_args: list, operation_name: str) -> bool:
     try:
-        process = subprocess.Popen(
+        result = subprocess.run(
             cmd_args,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -235,24 +204,23 @@ def _run_pip_command(cmd_args: list, operation_name: str) -> bool:
             encoding="utf-8",
             errors="replace",
         )
-        stdout, stderr = process.communicate()
 
-        if process.returncode == 0:
+        if result.returncode == 0:
             logger.info(f"{operation_name} 完成")
-            if stdout and stdout.strip():
+            if result.stdout and result.stdout.strip():
                 logger.debug(
-                    f"{operation_name} 标准输出:\n{stdout.strip()}"
+                    f"{operation_name} 标准输出:\n{result.stdout.strip()}"
                 )  # 仅当stdout不为空时记录
             return True
         else:
-            logger.error(f"{operation_name} 时出错。返回码: {process.returncode}")
-            if stdout and stdout.strip():
-                logger.error(f"{operation_name} 标准输出:\n{stdout.strip()}")
-            if stderr and stderr.strip():
-                logger.error(f"{operation_name} 标准错误:\n{stderr.strip()}")
+            logger.error(f"{operation_name} 时出错。返回码: {result.returncode}")
+            if result.stdout and result.stdout.strip():
+                logger.error(f"{operation_name} 标准输出:\n{result.stdout.strip()}")
+            if result.stderr and result.stderr.strip():
+                logger.error(f"{operation_name} 标准错误:\n{result.stderr.strip()}")
 
             # 检查是否403错误
-            if stderr and ("403" in stderr or "Forbidden" in stderr):
+            if result.stderr and ("403" in result.stderr or "Forbidden" in result.stderr):
                 logger.warning("检测到403错误，当前镜像源可能对某些包有访问限制")
                 return False
 
