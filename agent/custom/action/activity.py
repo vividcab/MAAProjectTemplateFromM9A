@@ -28,7 +28,7 @@ class DuringAct(CustomAction):
 
         resource = json.loads(argv.custom_action_param)["resource"]
 
-        with open(f"resource/{resource}.json", encoding="utf-8") as f:
+        with open(f"resource/data/activity/{resource}.json", encoding="utf-8") as f:
             data = json.load(f)
 
         now = int(time.time() * 1000)
@@ -93,7 +93,7 @@ class DuringAnecdote(CustomAction):
 
         resource = json.loads(argv.custom_action_param)["resource"]
 
-        with open(f"resource/{resource}.json", encoding="utf-8") as f:
+        with open(f"resource/data/activity/{resource}.json", encoding="utf-8") as f:
             data = json.load(f)
 
         now = int(time.time() * 1000)
@@ -135,7 +135,7 @@ class DuringRe_release(CustomAction):
 
         resource = json.loads(argv.custom_action_param)["resource"]
 
-        with open(f"resource/{resource}.json", encoding="utf-8") as f:
+        with open(f"resource/data/activity/{resource}.json", encoding="utf-8") as f:
             data = json.load(f)
 
         now = int(time.time() * 1000)
