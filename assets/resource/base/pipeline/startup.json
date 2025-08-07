@@ -627,7 +627,7 @@
                     0
                 ],
                 "roi": "SignInReward_template",
-                "count": 300
+                "count": 150
             }
         }
     },
@@ -647,7 +647,7 @@
                     0
                 ],
                 "roi": "SignInReward_template",
-                "count": 300
+                "count": 250
             }
         }
     },
