@@ -16,6 +16,7 @@
             "AccumulatedSignIn",
             "BirthdayReward",
             "Reward",
+            "sp01calendar",
             "SignInReward",
             "ClosePage",
             "Confirm",
@@ -51,6 +52,7 @@
             "BirthdayReward",
             "SignInReward",
             "Reward",
+            "sp01calendar",
             "ClosePage",
             "StartGame",
             "Confirm",
@@ -86,6 +88,7 @@
             "AccumulatedSignIn",
             "BirthdayReward",
             "Reward",
+            "sp01calendar",
             "SignInReward",
             "ClickTarot",
             "Confirm",
@@ -148,6 +151,7 @@
             "AccumulatedSignIn",
             "BirthdayReward",
             "Reward",
+            "sp01calendar",
             "SignInReward",
             "ClickTarot",
             "Confirm",
@@ -712,6 +716,34 @@
         },
         "action": {
             "type": "Click"
+        }
+    },
+    "sp01calendar": {
+        // 刺客信条联动版本月卡
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "template": [
+                    "StartUp/Canlendarsp01.png"
+                ],
+                "roi": [
+                    635,
+                    70,
+                    450,
+                    187
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    1075,
+                    103,
+                    22,
+                    22
+                ]
+            }
         }
     }
 }
