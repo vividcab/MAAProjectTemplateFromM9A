@@ -197,7 +197,7 @@ def find_local_wheels_dir():
 
     if deps_dir.exists() and any(deps_dir.glob("*.whl")):
         whl_count = len(list(deps_dir.glob("*.whl")))
-        logger.info(f"发现本地deps目录: {deps_dir}，包含 {whl_count} 个whl文件")
+        logger.info(f"发现本地deps目录包含 {whl_count} 个whl文件")
         return deps_dir
 
     logger.debug("未找到deps目录或目录中无whl文件")
@@ -206,37 +206,46 @@ def find_local_wheels_dir():
 
 def _run_pip_command(cmd_args: list, operation_name: str) -> bool:
     try:
-        result = subprocess.run(
+        logger.info(f"开始 {operation_name}")
+        logger.debug(f"执行命令: {' '.join(cmd_args)}")
+
+        # 使用subprocess.Popen进行实时输出
+        process = subprocess.Popen(
             cmd_args,
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            stderr=subprocess.STDOUT,  # 将stderr重定向到stdout
             text=True,
             encoding="utf-8",
             errors="replace",
+            bufsize=1,  # 行缓冲
+            universal_newlines=True,
         )
 
-        if result.returncode == 0:
+        # 收集所有输出用于日志记录
+        all_output = []
+
+        # 实时读取并显示输出
+        for line in iter(process.stdout.readline, ""):
+            line = line.rstrip("\n\r")
+            if line.strip():  # 只显示非空行
+                print(line)  # 实时显示到终端
+                all_output.append(line)  # 收集到列表中
+
+        # 等待进程结束
+        return_code = process.wait()
+
+        # 记录完整输出到日志
+        if all_output:
+            full_output = "\n".join(all_output)
+            logger.debug(f"{operation_name} 输出:\n{full_output}")
+
+        if return_code == 0:
             logger.info(f"{operation_name} 完成")
-            if result.stdout and result.stdout.strip():
-                logger.debug(
-                    f"{operation_name} 标准输出:\n{result.stdout.strip()}"
-                )  # 仅当stdout不为空时记录
             return True
         else:
-            logger.error(f"{operation_name} 时出错。返回码: {result.returncode}")
-            if result.stdout and result.stdout.strip():
-                logger.error(f"{operation_name} 标准输出:\n{result.stdout.strip()}")
-            if result.stderr and result.stderr.strip():
-                logger.error(f"{operation_name} 标准错误:\n{result.stderr.strip()}")
-
-            # 检查是否403错误
-            if result.stderr and (
-                "403" in result.stderr or "Forbidden" in result.stderr
-            ):
-                logger.warning("检测到403错误，当前镜像源可能对某些包有访问限制")
-                return False
-
+            logger.error(f"{operation_name} 时出错。返回码: {return_code}")
             return False
+
     except Exception as e:
         logger.exception(f"{operation_name} 时发生未知异常: {e}")
         return False
@@ -253,7 +262,6 @@ def install_requirements(req_file="requirements.txt", pip_config=None) -> bool:
     if deps_dir:
         logger.info(f"使用本地whl文件安装，目录: {deps_dir}")
 
-        # 使用--find-links让pip优先使用本地文件，但允许回退到在线
         cmd = [
             sys.executable,
             "-m",
@@ -266,10 +274,10 @@ def install_requirements(req_file="requirements.txt", pip_config=None) -> bool:
             "--break-system-packages",
             "--find-links",
             str(deps_dir),  # pip会优先使用这里的文件
+            "--no-index",  # 禁止在线索引
         ]
 
-        if _run_pip_command(cmd, f"从本地deps安装 {req_path.name} 依赖"):
-            logger.info("本地deps安装成功")
+        if _run_pip_command(cmd, f"从本地deps安装依赖"):
             return True
         else:
             logger.warning("本地deps安装失败，回退到纯在线安装")
@@ -323,7 +331,7 @@ def install_requirements(req_file="requirements.txt", pip_config=None) -> bool:
         if _run_pip_command(cmd, f"从 {req_path.name} 安装依赖 (本地全局配置)"):
             return True
         else:
-            logger.error("使用pip本地全局配置安装也失败")
+            logger.error("使用pip本地全局配置安装失败")
             return False
 
 
