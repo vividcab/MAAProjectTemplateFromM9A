@@ -158,11 +158,7 @@ def read_pip_config() -> dict:
         "enable_pip_install": True,
         "last_version": "unknown",
         "mirror": "https://pypi.tuna.tsinghua.edu.cn/simple",
-        "backup_mirrors": [
-            "https://mirrors.ustc.edu.cn/pypi/simple",
-            "https://mirrors.cloud.tencent.com/pypi/simple/",
-            "https://pypi.org/simple",
-        ],
+        "backup_mirror": "https://mirrors.ustc.edu.cn/pypi/simple",
     }
     if not config_path.exists():
         with open(config_path, "w", encoding="utf-8") as f:
@@ -194,6 +190,20 @@ def update_pip_config_last_version(version: str) -> bool:
 ### 依赖安装相关 ###
 
 
+def find_local_wheels_dir():
+    """查找本地deps目录中的whl文件"""
+    project_root = Path(project_root_dir)
+    deps_dir = project_root / "deps"
+
+    if deps_dir.exists() and any(deps_dir.glob("*.whl")):
+        whl_count = len(list(deps_dir.glob("*.whl")))
+        logger.info(f"发现本地deps目录: {deps_dir}，包含 {whl_count} 个whl文件")
+        return deps_dir
+
+    logger.debug("未找到deps目录或目录中无whl文件")
+    return None
+
+
 def _run_pip_command(cmd_args: list, operation_name: str) -> bool:
     try:
         result = subprocess.run(
@@ -220,7 +230,9 @@ def _run_pip_command(cmd_args: list, operation_name: str) -> bool:
                 logger.error(f"{operation_name} 标准错误:\n{result.stderr.strip()}")
 
             # 检查是否403错误
-            if result.stderr and ("403" in result.stderr or "Forbidden" in result.stderr):
+            if result.stderr and (
+                "403" in result.stderr or "Forbidden" in result.stderr
+            ):
                 logger.warning("检测到403错误，当前镜像源可能对某些包有访问限制")
                 return False
 
@@ -236,11 +248,38 @@ def install_requirements(req_file="requirements.txt", pip_config=None) -> bool:
         logger.error(f"{req_file} 文件不存在于 {req_path.resolve()}")
         return False
 
+    # 查找本地deps目录
+    deps_dir = find_local_wheels_dir()
+    if deps_dir:
+        logger.info(f"使用本地whl文件安装，目录: {deps_dir}")
+
+        # 使用--find-links让pip优先使用本地文件，但允许回退到在线
+        cmd = [
+            sys.executable,
+            "-m",
+            "pip",
+            "install",
+            "-U",
+            "-r",
+            str(req_path),
+            "--no-warn-script-location",
+            "--break-system-packages",
+            "--find-links",
+            str(deps_dir),  # pip会优先使用这里的文件
+        ]
+
+        if _run_pip_command(cmd, f"从本地deps安装 {req_path.name} 依赖"):
+            logger.info("本地deps安装成功")
+            return True
+        else:
+            logger.warning("本地deps安装失败，回退到纯在线安装")
+
+    # 回退到在线安装
     primary_mirror = pip_config.get("mirror", "")
-    backup_mirrors = pip_config.get("backup_mirrors", [])
+    backup_mirror = pip_config.get("backup_mirror", "")
 
     if primary_mirror:
-        # 构建命令，添加所有备用源作为extra-index-url
+        # 使用主镜像源，只添加一个备用源避免冲突
         cmd = [
             sys.executable,
             "-m",
@@ -255,15 +294,17 @@ def install_requirements(req_file="requirements.txt", pip_config=None) -> bool:
             primary_mirror,
         ]
 
-        # 添加所有备用源作为extra-index-url
-        for backup_mirror in backup_mirrors:
-            if backup_mirror:  # 确保不是None或空字符串
-                cmd.extend(["--extra-index-url", backup_mirror])
+        # 只添加一个备用源
+        if backup_mirror:
+            cmd.extend(["--extra-index-url", backup_mirror])
+            logger.info(f"使用主源 {primary_mirror} 和备用源 {backup_mirror} 安装依赖")
+        else:
+            logger.info(f"使用主源 {primary_mirror} 安装依赖")
 
         if _run_pip_command(cmd, f"从 {req_path.name} 安装依赖"):
             return True
         else:
-            logger.error("所有镜像源策略均失败")
+            logger.error("在线安装失败")
             return False
     else:
         # 如果没有配置主镜像源，使用pip的本地全局配置
