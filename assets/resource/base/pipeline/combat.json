@@ -105,7 +105,10 @@
                     229,
                     153
                 ],
-                "template": "Combat/EnterTheShow.png"
+                "template": [
+                    "Combat/EnterTheShow.png",
+                    "Combat/EnterTheShow_sp01.png"
+                ]
             }
         },
         "action": {

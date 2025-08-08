@@ -52,7 +52,10 @@
                     194,
                     166
                 ],
-                "template": "StartUp/HomeFlag.png"
+                "template": [
+                    "StartUp/HomeFlag.png",
+                    "StartUp/HomeFlag_sp01.png"
+                ]
             }
         },
         "action": {
