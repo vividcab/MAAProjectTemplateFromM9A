@@ -507,6 +507,11 @@ class MultiRecognition(CustomRecognition):
         x1, y1, w1, h1 = roi1
         x2, y2, w2, h2 = roi2
 
+        if w1 == 0 and h1 == 0:
+            return roi2
+        elif w2 == 0 and h2 == 0:
+            return roi1
+
         # 计算边界
         left = min(x1, x2)
         top = min(y1, y2)
