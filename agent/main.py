@@ -156,7 +156,6 @@ def read_pip_config() -> dict:
     config_path = config_dir / "pip_config.json"
     default_config = {
         "enable_pip_install": True,
-        "last_version": "unknown",
         "mirror": "https://pypi.tuna.tsinghua.edu.cn/simple",
         "backup_mirror": "https://mirrors.ustc.edu.cn/pypi/simple",
     }
@@ -172,21 +171,6 @@ def read_pip_config() -> dict:
         return default_config
 
 
-def update_pip_config_last_version(version: str) -> bool:
-    config_path = Path(project_root_dir) / "config" / "pip_config.json"
-    try:
-        config = read_pip_config()
-        config["last_version"] = version
-
-        config_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(config_path, "w", encoding="utf-8") as f:
-            json.dump(config, f, indent=4)
-        return True
-    except Exception:
-        logger.exception("更新pip配置失败")
-        return False
-
-
 ### 依赖安装相关 ###
 
 
@@ -197,10 +181,10 @@ def find_local_wheels_dir():
 
     if deps_dir.exists() and any(deps_dir.glob("*.whl")):
         whl_count = len(list(deps_dir.glob("*.whl")))
-        logger.info(f"发现本地deps目录包含 {whl_count} 个whl文件")
+        logger.info(f"发现本地deps目录包含 {whl_count} 个 whl 文件")
         return deps_dir
 
-    logger.debug("未找到deps目录或目录中无whl文件")
+    logger.debug("未找到deps目录或目录中无 whl 文件")
     return None
 
 
@@ -260,7 +244,7 @@ def install_requirements(req_file="requirements.txt", pip_config=None) -> bool:
     # 查找本地deps目录
     deps_dir = find_local_wheels_dir()
     if deps_dir:
-        logger.info(f"使用本地whl文件安装，目录: {deps_dir}")
+        logger.info(f"使用本地 whl 文件安装，目录: {deps_dir}")
 
         cmd = [
             sys.executable,
@@ -339,35 +323,17 @@ def check_and_install_dependencies():
     """检查并安装项目依赖"""
     pip_config = read_pip_config()
     enable_pip_install = pip_config.get("enable_pip_install", True)
-    current_version = read_interface_version()
-    last_version = pip_config.get("last_version", "unknown")
 
     logger.info(f"启用 pip 安装依赖: {enable_pip_install}")
-    logger.info(f"当前资源版本: {current_version}, 上次运行版本: {last_version}")
 
-    is_dev_mode = current_version == "DEBUG"
-    version_changed = current_version != last_version or last_version == "unknown"
-    should_install = enable_pip_install and (is_dev_mode or version_changed)
-
-    if should_install:
-        # 执行依赖安装
-        if is_dev_mode:
-            logger.info("当前处于开发模式，安装/更新依赖")
-        else:
-            logger.info("版本不匹配或上次版本未知，开始安装/更新依赖")
-
+    if enable_pip_install:
+        logger.info("开始安装/更新依赖")
         if install_requirements(pip_config=pip_config):
-            update_pip_config_last_version(current_version)
             logger.info("依赖检查和安装完成")
         else:
             logger.warning("依赖安装失败，程序可能无法正常运行")
     else:
-        if not enable_pip_install:
-            logger.info("Pip 依赖安装已禁用")
-        elif not version_changed:
-            logger.info("版本匹配，跳过依赖安装")
-        else:
-            logger.info("跳过依赖安装")
+        logger.info("Pip 依赖安装已禁用，跳过依赖安装")
 
 
 ### 核心业务 ###
