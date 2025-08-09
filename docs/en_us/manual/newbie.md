@@ -588,14 +588,9 @@ At least configure **`Resource Type`** and **`Connection`**. When configured inc
   
   ```jsonc
   {
-      "enable_pip_install": true,  // Whether to enable pip installation, default true, recommended to enable
-      "last_version": "v3.2.0",  // Version of interface.json read when pip installation is completed, compared with version at startup, tries to install if different
-      "mirror": "https://mirrors.ustc.edu.cn/pypi/simple", // Mirror source. Parameters after pip install -i, can be filled according to personal needs. Note that users outside mainland China should modify the value to ""
-      "backup_mirrors": [
-      "https://pypi.tuna.tsinghua.edu.cn/simple",
-      "https://mirrors.cloud.tencent.com/pypi/simple/",
-      "https://pypi.org/simple"
-      ]  // Backup mirror sources
+      "enable_pip_install": true,  // Whether to enable pip installation, default true
+      "mirror": "https://pypi.tuna.tsinghua.edu.cn/simple",  // Mirror source
+      "backup_mirror": "https://mirrors.ustc.edu.cn/pypi/simple"  // Backup mirror sources
   }
   ```
   
