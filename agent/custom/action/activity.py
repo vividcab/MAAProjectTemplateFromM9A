@@ -100,6 +100,10 @@ class DuringAnecdote(CustomAction):
 
         for key in reversed(list(data.keys())):
             item = data[key]
+            
+            if not item["activity"].get("anecdote"):
+                continue
+            
             if now < item["activity"]["anecdote"]["end_time"]:
                 if now > item["activity"]["anecdote"]["start_time"]:
                     logger.info(f"当前版本：{key} {item['version_name']}")
