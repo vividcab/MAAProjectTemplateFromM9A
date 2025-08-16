@@ -57,25 +57,34 @@ jobs:
           if [[ -n "$(git status --porcelain assets/resource/data/activity/)" ]]; then
             echo "Changes detected in assets/resource/data/activity/"
             git status --porcelain assets/resource/data/activity/
-            echo "CHANGES_DETECTED=true" >> $GITHUB_ENV
+            echo "changes_detected=true" >> $GITHUB_OUTPUT
             
             # 检查哪些文件发生了变化
             if [[ -n "$(git status --porcelain assets/resource/data/activity/cn.json)" ]]; then
-              echo "CN_CHANGED=true" >> $GITHUB_ENV
+              echo "cn_changed=true" >> $GITHUB_OUTPUT
+            else
+              echo "cn_changed=false" >> $GITHUB_OUTPUT
             fi
             if [[ -n "$(git status --porcelain assets/resource/data/activity/en.json)" ]]; then
-              echo "EN_CHANGED=true" >> $GITHUB_ENV
+              echo "en_changed=true" >> $GITHUB_OUTPUT
+            else
+              echo "en_changed=false" >> $GITHUB_OUTPUT
             fi
             if [[ -n "$(git status --porcelain assets/resource/data/activity/jp.json)" ]]; then
-              echo "JP_CHANGED=true" >> $GITHUB_ENV
+              echo "jp_changed=true" >> $GITHUB_OUTPUT
+            else
+              echo "jp_changed=false" >> $GITHUB_OUTPUT
             fi
           else
             echo "No changes detected in assets/resource/data/activity/"
-            echo "CHANGES_DETECTED=false" >> $GITHUB_ENV
+            echo "changes_detected=false" >> $GITHUB_OUTPUT
+            echo "cn_changed=false" >> $GITHUB_OUTPUT
+            echo "en_changed=false" >> $GITHUB_OUTPUT
+            echo "jp_changed=false" >> $GITHUB_OUTPUT
           fi
       
       - name: Commit and Push Changes
-        if: env.CHANGES_DETECTED == 'true'
+        if: steps.check_status.outputs.changes_detected == 'true'
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -85,13 +94,13 @@ jobs:
           
           # 创建定制的提交消息
           changed_files=""
-          if [[ "${{ env.CN_CHANGED }}" == "true" ]]; then
+          if [[ "${{ steps.check_status.outputs.cn_changed }}" == "true" ]]; then
             changed_files+="cn "
           fi
-          if [[ "${{ env.EN_CHANGED }}" == "true" ]]; then
+          if [[ "${{ steps.check_status.outputs.en_changed }}" == "true" ]]; then
             changed_files+="en "
           fi
-          if [[ "${{ env.JP_CHANGED }}" == "true" ]]; then
+          if [[ "${{ steps.check_status.outputs.jp_changed }}" == "true" ]]; then
             changed_files+="jp "
           fi
           
@@ -104,5 +113,5 @@ jobs:
           echo "JSON files successfully synchronized"
 
       - name: No changes detected
-        if: env.CHANGES_DETECTED != 'true'
+        if: steps.check_status.outputs.changes_detected != 'true'
         run: echo "No changes detected in JSON files"
