@@ -1,7 +1,6 @@
 from .general import *
 from .bank import *
 from .activity import *
-from .combat import *
 
 __all__ = [
     "MultiRecognition",
@@ -9,5 +8,4 @@ __all__ = [
     "BankShop",
     "ActivityRe_releaseChapter",
     "FindFirstUnplayedStageByCheckmark",
-    "StagePromotionComplete",
 ]

@@ -1,6 +1,6 @@
 [remote.github]
-owner = "MAA1999"
-repo = "M9A"
+owner = "vividcab"
+repo = "MAAProjectTemplateFromM9A"
 
 [changelog]
 # 标题
@@ -62,9 +62,9 @@ body = """
 # 尾部
 footer = """
 
-[已有 Mirror酱 CDK？点击前往高速下载](https://mirrorchyan.com/zh/projects?rid=M9A&source=m9agh-release)
+[已有 Mirror酱 CDK？点击前往高速下载](https://mirrorchyan.com/zh/projects?rid=&source=)
 
-<!--软件本体完全免费，认准唯一官网 1999.fan，若您有付费购买请立即退款并举报！-->
+<!--软件本体完全免费，若您有付费购买请立即退款并举报！-->
 """
 
 [git]

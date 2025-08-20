@@ -1,13 +1,10 @@
-# M9A 长期公告
+# MAAProjectTemplateFromM9A 长期公告
 
-![LOGO](https://mirrorchyan.com/api/misc/static/project/M9A.png)
-
-基于全新架构的 亿韭韭韭 小助手。图像技术 + 模拟控制，解放双手！
+基于 [@MAA1999/M9A](https://github.com/MAA1999/M9A) 的 MaaFramework 社区项目开发模板。
 
 > **重要提示**：
 >
-> 本项目GitHub链接：[@MAA1999/M9A](https://github.com/MAA1999/M9A)  
-> 软件本体完全免费，认准唯一官网 [1999.fan](https://1999.fan)，若您有付费购买请立即退款并举报！
+> 软件本体完全免费，若您有付费购买请立即退款并举报！
 
 ## 使用说明
 
@@ -18,7 +15,8 @@
 - [常见问题](https://1999.fan/docs/zh_cn/manual/常见问题.html)
 - [Mirror酱使用说明](https://1999.fan/docs/zh_cn/manual/Mirror酱.html)
 
-## 加入我们
+## 鸣谢
 
-- M9A QQ 交流（用户）群：[175638678](https://qm.qq.com/q/CFEDGsEU1y)
-- M9A QQ 开发群：[649344857](https://qm.qq.com/q/1RjXRtSkuU)
+本项目为 MaaFramework 社区项目开发模板，从出色的 [M9A](https://github.com/MAA1999/M9A) 项目 Fork 修改而来！
+本项目由 **[MaaFramework](https://github.com/MaaXYZ/MaaFramework)** 强力驱动！  
+UI 由 [MFAAvalonia](https://github.com/SweetSmellFox/MFAAvalonia) 大力支持！
